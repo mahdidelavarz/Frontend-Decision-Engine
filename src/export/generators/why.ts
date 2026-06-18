@@ -1,0 +1,114 @@
+import type { WizardState } from "@/types";
+
+const frameworkRationale: Record<string, string> = {
+  next: "Next.js was chosen for its hybrid rendering capabilities (SSR, SSG, RSC), built-in routing, and tight Vercel integration. It's the safest long-term bet for React applications that may need SEO or server-side logic.",
+  "vite-react": "Vite + React was chosen for a pure client-side SPA with minimal overhead. It offers the fastest possible development experience (HMR in milliseconds) and is ideal when all data fetching happens client-side.",
+  remix: "Remix was chosen for its progressive enhancement philosophy, nested routing, and excellent form handling. It treats the browser as a first-class client and builds on web standards.",
+  astro: "Astro was chosen for its content-first, island architecture approach. It ships zero JavaScript by default and hydrates only interactive components, making it ideal for marketing sites and documentation.",
+  sveltekit: "SvelteKit was chosen as an alternative to React for its compiler-based approach that eliminates the virtual DOM. It typically produces smaller bundles and has excellent built-in routing.",
+};
+
+const stateRationale: Record<string, string> = {
+  zustand: "Zustand was chosen for its minimal API surface (~1KB gzipped), zero boilerplate, and excellent TypeScript support. It handles both simple and complex global state without Redux's ceremony.",
+  "redux-toolkit": "Redux Toolkit was chosen for its standardized patterns, powerful DevTools integration, and strong ecosystem. It's worth the additional complexity for large teams or complex state machines.",
+  jotai: "Jotai was chosen for its atomic state model that composes naturally and is compatible with React Server Components. It avoids the global singleton issue that affects Redux and Zustand in RSC.",
+  "context-only": "React Context was chosen to avoid adding a state library. This is a good call when global state is minimal and updates are infrequent — Context re-renders all consumers on every change, so it's unsuitable for frequently updated state.",
+  none: "No global state library was chosen. All data fetching is handled server-side (RSC or server functions), making client-side state largely unnecessary.",
+};
+
+const serverStateRationale: Record<string, string> = {
+  "react-query": "TanStack Query (React Query) was chosen for its robust caching layer, background refetching, optimistic updates, and mutation support. It's the most full-featured option and works with REST, GraphQL, and custom fetchers.",
+  swr: "SWR was chosen for its minimal API and REST-first design. It provides stale-while-revalidate caching with a smaller footprint than React Query.",
+  none: "No server state library was chosen. Data fetching is handled with RSC, server actions, or manual fetch — appropriate when server-side rendering handles most data needs.",
+};
+
+const formRationale: Record<string, string> = {
+  "react-hook-form": "React Hook Form was chosen for its performance-first approach (uncontrolled inputs, minimal re-renders), small size (~9KB), and excellent integration with Zod via the @hookform/resolvers package.",
+  "tanstack-form": "TanStack Form was chosen for its type-safe, headless approach and first-class TypeScript support. It's the modern successor and handles complex form scenarios elegantly.",
+  formik: "Formik was chosen for its familiarity and large adoption base. Note: Formik is in maintenance mode with no active development.",
+  none: "No form library was chosen. Native HTML form handling is appropriate for simple forms with few fields.",
+};
+
+const stylingRationale: Record<string, string> = {
+  tailwind: "Tailwind CSS was chosen for its utility-first approach that keeps styling co-located with markup, eliminating dead CSS and making design constraints explicit. Tailwind 4 with its CSS-based configuration is significantly improved.",
+  "css-modules": "CSS Modules were chosen for scoped, locally-namespaced CSS with zero runtime overhead. They work naturally with any build tool and avoid global namespace pollution.",
+  scss: "SCSS was chosen for its nesting, variables, and mixins — familiar for teams coming from a Bootstrap/SCSS background.",
+  "styled-components": "Styled Components was chosen for its component-scoped CSS-in-JS approach with dynamic styling capabilities. Note: it adds a runtime cost and is incompatible with RSC.",
+  emotion: "Emotion was chosen for its flexible CSS-in-JS with both string and object syntax. Note: it adds runtime overhead and is incompatible with RSC.",
+};
+
+const testingRationale: Record<string, string> = {
+  vitest: "Vitest was chosen for its native Vite integration, Jest-compatible API, and dramatically faster execution. It supports TypeScript and ESM natively without configuration.",
+  jest: "Jest was chosen for its massive ecosystem, stable API, and broad Next.js support via `@jest/globals` and SWC transforms.",
+  none: "No unit testing framework was selected. This is a risk — consider adding Vitest at minimum for critical business logic.",
+  playwright: "Playwright was chosen for its multi-browser support, reliable selectors, and excellent TypeScript integration. It handles modern web APIs (dialogs, file uploads, network mocking) better than Cypress.",
+  cypress: "Cypress was chosen for its excellent developer experience, real-time test runner UI, and large community. Best for teams new to E2E testing.",
+};
+
+export function generateWhy(state: WizardState): string {
+  const { project, standards } = state;
+  const sections: string[] = [];
+
+  sections.push(`# Why — ${project.projectName || "This Project"}
+
+This document explains the rationale behind each architectural decision. It exists so future team members (and your future self) understand not just *what* was chosen, but *why*.
+
+---
+`);
+
+  if (project.framework) {
+    sections.push(`## Framework: ${project.framework}
+
+${frameworkRationale[project.framework] || "No rationale available."}
+`);
+  }
+
+  if (project.stateManagement.length > 0) {
+    const statePicks = project.stateManagement.filter((s) => s !== "none");
+    if (statePicks.length > 0) {
+      sections.push(`## State Management: ${statePicks.join(", ")}
+
+${statePicks.map((s) => stateRationale[s] || "").filter(Boolean).join("\n\n")}
+`);
+    }
+  }
+
+  sections.push(`## Server State: ${project.serverState}
+
+${serverStateRationale[project.serverState] || "No rationale available."}
+`);
+
+  if (project.formLibrary !== "none") {
+    sections.push(`## Forms: ${project.formLibrary}
+
+${formRationale[project.formLibrary] || "No rationale available."}
+`);
+  }
+
+  if (project.styling.length > 0) {
+    sections.push(`## Styling: ${project.styling.join(", ")}
+
+${project.styling.map((s) => stylingRationale[s] || "").filter(Boolean).join("\n\n")}
+`);
+  }
+
+  if (standards.testingUnit !== "none") {
+    sections.push(`## Unit Testing: ${standards.testingUnit}
+
+${testingRationale[standards.testingUnit] || "No rationale available."}
+`);
+  }
+
+  if (standards.testingE2E !== "none") {
+    sections.push(`## E2E Testing: ${standards.testingE2E}
+
+${testingRationale[standards.testingE2E] || "No rationale available."}
+`);
+  }
+
+  sections.push(`---
+
+*Generated by Frontend Decision Engine. Decisions can be revisited at any time by re-running your blueprint.*`);
+
+  return sections.join("\n");
+}
