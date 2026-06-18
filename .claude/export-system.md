@@ -4,7 +4,7 @@
 
 ## Overview
 
-The export system generates 8 files and bundles them into a ZIP download. All generation is client-side. No server involved.
+The export system generates 9 files and bundles them into a ZIP download. All generation is client-side. No server involved.
 
 **Entry point:** `triggerZipDownload(state: WizardState): Promise<void>`
 
@@ -24,6 +24,7 @@ Called from the Export step's Download button.
 | `tokens.css` | `generators/tokensCss.ts` | CSS custom properties for design tokens |
 | `tokens.tailwind.json` | `generators/tokensTailwind.ts` | Flat JSON for Tailwind 4 `@theme` block |
 | `.gitignore` | `generators/gitignore.ts` | .gitignore based on selected framework |
+| `apply-blueprint.js` | `generators/applyBlueprint.ts` | Node.js installer — scaffolds project, installs deps, creates folders, injects tokens |
 
 ---
 
@@ -169,6 +170,7 @@ export async function triggerZipDownload(state: WizardState): Promise<void> {
   zip.file('tokens.css', generateTokensCss(state));
   zip.file('tokens.tailwind.json', JSON.stringify(generateTokensTailwind(state), null, 2));
   zip.file('.gitignore', generateGitignore(state));
+  zip.file('apply-blueprint.js', generateApplyBlueprint(state)); // added in changes.md
 
   const blob = await zip.generateAsync({ type: 'blob' });
   const url = URL.createObjectURL(blob);
@@ -186,9 +188,24 @@ export async function triggerZipDownload(state: WizardState): Promise<void> {
 
 ---
 
+## apply-blueprint.js
+
+The installer script runs in Node.js with zero dependencies (uses built-in `fs`, `path`, `child_process`, `readline`).
+
+```
+node apply-blueprint.js           # interactive — shows summary, prompts Y/n, executes
+node apply-blueprint.js --dry-run # prints all intended actions, creates nothing
+```
+
+**Steps:** scaffold project → install prod deps → install dev deps → create folder structure → write placeholder files (api.ts, constants.ts, queryClient.ts, store/index.ts) → copy docs to /docs → inject tokens.css → update tsconfig.json paths → write biome.json / .prettierrc → init husky.
+
+**Philosophy:** every write calls `writeIfMissing()` (checks `fs.existsSync` first). Config additions use `appendIfMissing()`. Never overwrites existing files.
+
+---
+
 ## Export Step UX
 
-The Export step shows a checklist of all 8 files with:
+The Export step shows a checklist of all 9 files with:
 - File name
 - Brief description
 - Line count estimate (computed from generated string length)

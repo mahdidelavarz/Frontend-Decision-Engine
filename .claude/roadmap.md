@@ -2,13 +2,13 @@
 
 ## Overview
 
-**Target:** Publicly deployed MVP in 12-16 focused development days (solo).
+**Status (2026-06-18):** MVP complete. All 4 phases shipped. Phase 5 (changes.md) complete.
 
-**Principle:** Ship a working product in Phase 3. Phase 4 is polish.
+**Principle:** Ship a working product in Phase 3. Phase 4 is polish. Phase 5 upgraded visualization, accessibility, and added the blueprint installer.
 
 ---
 
-## Phase 1 — Foundation (Days 1-4)
+## Phase 1 — Foundation (Days 1-4) ✓ COMPLETE
 
 Goal: Navigable shell with real persistence. No step content yet.
 
@@ -46,7 +46,7 @@ Goal: Navigable shell with real persistence. No step content yet.
 
 ---
 
-## Phase 2 — Wizard Steps (Days 5-9)
+## Phase 2 — Wizard Steps (Days 5-9) ✓ COMPLETE
 
 Goal: Complete wizard flow. No export, no rule engine.
 
@@ -72,7 +72,7 @@ Goal: Complete wizard flow. No export, no rule engine.
 
 ---
 
-## Phase 3 — Rule Engine + Export (Days 10-13)
+## Phase 3 — Rule Engine + Export (Days 10-13) ✓ COMPLETE
 
 Goal: Fully working product.
 
@@ -101,7 +101,7 @@ Goal: Fully working product.
 
 ---
 
-## Phase 4 — Polish + Deploy (Days 14-16)
+## Phase 4 — Polish + Deploy (Days 14-16) ✓ COMPLETE
 
 Goal: Public URL, accessible, professional.
 
@@ -120,6 +120,25 @@ Goal: Public URL, accessible, professional.
 - [ ] Update `README.md` in repo with: what the product is, how to run locally, how to deploy
 
 **Deliverable:** Public URL, shareable.
+
+---
+
+---
+
+## Phase 5 — changes.md Upgrades ✓ COMPLETE (2026-06-18)
+
+Goal: Distributed preview philosophy, accessibility, and blueprint application.
+
+### Delivered
+
+- [x] **WCAG contrast** — `derive.ts` now computes AA/AAA/FAIL for all 10 accent shades vs white and black; exported as `contrastOnWhite` / `contrastOnBlack` on `DerivedTokens`
+- [x] **DesignSystemStep live preview** — two-column layout; sticky right panel shows buttons, card, form input, badges, alerts, empty state, and contrast strip with accessibility badges; updates on every token change
+- [x] **ArchitectureStep folder tree** — dark terminal-style tree in right panel; updates live with folder strategy, naming convention, alias settings
+- [x] **StandardsStep quality summary** — quality tier badge (Comprehensive / Standard / Minimal) + 10 detail rows; updates on every change
+- [x] **UXPatternsStep interaction examples** — animated skeleton/spinner/progress-bar, empty state variants, toast/snackbar/redirect, modal/inline confirmation; all CSS-only
+- [x] **PreviewStep full visual system** — expanded to: accent scale, WCAG contrast table, typography, component gallery (buttons, card, form, badges, alerts), radius/shadow, spacing scale, UX pattern summary cards, standards summary table
+- [x] **apply-blueprint.js** — new 9th export file; Node.js zero-dependency installer with `--dry-run`, Y/n prompt, additive-only writes, 7 scaffolding steps
+- [x] **devmap.md** — architecture map written to `.claude/devmap.md`
 
 ---
 

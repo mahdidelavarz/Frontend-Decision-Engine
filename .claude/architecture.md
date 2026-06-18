@@ -2,7 +2,9 @@
 
 ## Product Mission
 
-Frontend Decision Engine is a **decision-making tool**, not a code generator. It helps developers make and document all critical frontend architecture decisions before writing code. Outputs are documentation files, not generated projects.
+Frontend Decision Engine is a **decision-making tool**, not a code generator. It helps developers make, validate, visualize, document, and apply frontend architecture decisions before writing business code. Outputs are documentation files, design tokens, and a blueprint installer script — not generated application code.
+
+**Product lifecycle:** Think → Validate → Visualize → Document → Apply
 
 ---
 
@@ -62,6 +64,7 @@ src/
 │   ├── ui/                     # 14 generic primitives (no library)
 │   ├── wizard/                 # WizardShell, StepNav, StepHeader, StepFooter, AdvisorPanel
 │   └── steps/                  # One file per wizard step (8 total)
+│       └── previews/           # Contextual preview panels (DesignPreview, FolderTree, QualitySummary, UXExamples)
 │
 ├── store/
 │   └── wizardStore.ts          # Zustand store
@@ -72,8 +75,8 @@ src/
 │   └── evaluate.ts             # Pure function: state → Violation[]
 │
 ├── export/
-│   ├── generators/             # 8 generator functions (template literals)
-│   └── zip.ts                  # JSZip bundler
+│   ├── generators/             # 9 generator functions (template literals) — includes applyBlueprint.ts
+│   └── zip.ts                  # JSZip bundler (9 files)
 │
 ├── tokens/
 │   ├── derive.ts               # DesignSystemData → DerivedTokens (pure)
@@ -113,4 +116,4 @@ Do NOT use `skipHydration` — `'use client'` boundary is simpler and equally co
 /* DO NOT put user tokens in @theme — they're applied as inline styles */
 ```
 
-User's design token choices are applied as `style={{ '--accent-500': '#3b82f6' }}` on the `PreviewStep` container div — never touching the wizard's own theme.
+User's design token choices are applied as `style={{ '--accent-500': '#3b82f6' }}` on the step container div — never touching the wizard's own theme. This pattern is used in both `DesignSystemStep` (live preview panel) and `PreviewStep` (full visual system review).

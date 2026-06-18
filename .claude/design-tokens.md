@@ -13,34 +13,62 @@ User choices in the Design System step map to a complete set of CSS custom prope
 ```typescript
 // src/tokens/derive.ts
 
+export type ContrastLevel = "AAA" | "AA" | "FAIL";
+
 export interface DerivedTokens {
-  colors: {
-    accent: Record<'50'|'100'|'200'|'300'|'400'|'500'|'600'|'700'|'800'|'900', string>;
-  };
-  typography: {
-    fontFamily: string;
-    sizes: Record<'xs'|'sm'|'base'|'lg'|'xl'|'2xl'|'3xl', string>;
-  };
-  spacing: Record<'1'|'2'|'3'|'4'|'6'|'8'|'12'|'16'|'24', string>;
-  radius: Record<'sm'|'md'|'lg'|'xl'|'full', string>;
-  shadow: Record<'sm'|'md'|'lg', string>;
+  accent: Record<string, string>;           // "50"–"900" hex values
+  fontFamily: string;                        // CSS font stack
+  radius: Record<string, string>;            // sm/md/lg/xl/full
+  shadow: Record<string, string>;            // sm/md/lg
+  spacing: Record<string, string>;           // "1"–"24" rem values
+  spacingBase: number;                       // base px (4/8/12/16)
+  contrastOnWhite: Record<string, ContrastLevel>;  // AA/AAA/FAIL per shade
+  contrastOnBlack: Record<string, ContrastLevel>;  // AA/AAA/FAIL per shade
 }
 
-export function deriveTokens(designSystem: DesignSystemData): DerivedTokens {
+export function deriveTokens(ds: DesignSystemData): DerivedTokens {
+  const accent = generateAccentScale(ds.accentColorHex);
   return {
-    colors: {
-      accent: generateAccentScale(designSystem.accentColorHex),
-    },
-    typography: {
-      fontFamily: fontFamilyMap[designSystem.fontFamily],
-      sizes: defaultTypographySizes, // fixed scale, not user-configurable in MVP
-    },
-    spacing: generateSpacingScale(designSystem.spacingBase),
-    radius: radiusScaleMap[designSystem.radiusScale],
-    shadow: shadowMap[designSystem.shadowDepth],
+    accent,
+    fontFamily: FONT_MAP[ds.fontFamily],
+    radius: RADIUS_MAP[ds.radiusScale],
+    shadow: SHADOW_MAP[ds.shadowDepth],
+    spacing: generateSpacingScale(ds.spacingBase),
+    spacingBase: ds.spacingBase,
+    contrastOnWhite: buildContrastMap(accent, "#ffffff"),
+    contrastOnBlack: buildContrastMap(accent, "#000000"),
   };
 }
 ```
+
+---
+
+## WCAG Contrast Calculation
+
+Added to `src/tokens/derive.ts`. No external library — pure math per WCAG 2.1:
+
+```typescript
+// Linearize sRGB channel
+function toLinear(c: number): number {
+  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+// Relative luminance (WCAG 2.1 formula)
+function getRelativeLuminance(hex: string): number {
+  const r = toLinear(parseInt(hex.slice(1, 3), 16) / 255);
+  const g = toLinear(parseInt(hex.slice(3, 5), 16) / 255);
+  const b = toLinear(parseInt(hex.slice(5, 7), 16) / 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+// Contrast ratio: (lighter + 0.05) / (darker + 0.05)
+export function getContrastRatio(hex1: string, hex2: string): number { ... }
+
+// AA ≥ 4.5 : 1 (normal text) · AAA ≥ 7 : 1 (enhanced)
+export function getWCAGLevel(ratio: number): "AAA" | "AA" | "FAIL" { ... }
+```
+
+`deriveTokens()` calls these for all 10 accent shades and includes the results in `contrastOnWhite` and `contrastOnBlack`. Used by `DesignPreview` (contrast strip) and `PreviewStep` (accessibility table).
 
 ---
 
