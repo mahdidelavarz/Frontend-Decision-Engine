@@ -2,11 +2,24 @@
 
 import { useWizardStore } from "@/store";
 import { StepHeader } from "@/components/wizard/StepHeader";
+import { useStepBack } from "@/components/wizard/useStepBack";
 import { RadioGroup } from "@/components/ui/RadioGroup";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Collapsible } from "@/components/ui/Collapsible";
+import { Section } from "@/components/ui/Section";
 import { Input } from "@/components/ui/Input";
 import { QualitySummary } from "@/components/steps/previews/QualitySummary";
+import {
+  TriangleAlert,
+  FlaskConical,
+  TestTube,
+  Wrench,
+  GitBranch,
+  Bot,
+  Settings2,
+  Target,
+  Users,
+} from "lucide-react";
 import type { StandardsData, TeamAgreementsData } from "@/types";
 
 export function isStandardsComplete(_s: StandardsData): boolean {
@@ -100,6 +113,17 @@ const aiToolOptions = [
   },
 ];
 
+const accessibilityOptions = [
+  { value: "basic", label: "Basic", description: "Semantic HTML, keyboard nav" },
+  { value: "wcag-aa", label: "WCAG AA", description: "4.5:1 contrast, full keyboard" },
+  { value: "wcag-aaa", label: "WCAG AAA", description: "7:1 contrast — highest bar" },
+];
+
+const browserSupportOptions = [
+  { value: "modern", label: "Modern browsers", description: "Last 2 versions, no IE" },
+  { value: "legacy", label: "Legacy support", description: "IE11+ / older mobile browsers" },
+];
+
 const teamAgreementItems: { key: keyof Omit<TeamAgreementsData, "maxFileLines">; label: string; description: string }[] = [
   { key: "noAny", label: "No any", description: "Ban TypeScript any — use unknown or proper types" },
   { key: "preferInterfaces", label: "Prefer interfaces", description: "Use interface over type for object shapes" },
@@ -111,6 +135,7 @@ const teamAgreementItems: { key: keyof Omit<TeamAgreementsData, "maxFileLines">;
 
 export function StandardsStep() {
   const { standards, teamAgreements, updateStandards, updateTeamAgreements } = useWizardStore();
+  const onBack = useStepBack();
 
   const toggleLinting = (val: StandardsData["linting"][number]) => {
     const current = standards.linting;
@@ -126,51 +151,40 @@ export function StandardsStep() {
         stepNumber={4}
         title="Project Standards"
         description="Define how your team handles errors, testing, and code quality. These get documented in your guidelines."
+        onBack={onBack}
       />
 
       <div className="flex gap-8 items-start">
         {/* ── Form controls ── */}
-        <div className="flex-1 min-w-0 space-y-8">
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Error Handling Strategy
-            </label>
+        <div className="flex-1 min-w-0 space-y-10">
+          <Section id="errorHandling" title="Error Handling Strategy" icon={<TriangleAlert size={14} />}>
             <RadioGroup
               options={errorOptions}
               value={standards.errorHandling}
               onChange={(v) => updateStandards({ errorHandling: v as StandardsData["errorHandling"] })}
               columns={3}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Unit Testing
-            </label>
+          <Section id="testingUnit" title="Unit Testing" icon={<FlaskConical size={14} />}>
             <RadioGroup
               options={unitOptions}
               value={standards.testingUnit}
               onChange={(v) => updateStandards({ testingUnit: v as StandardsData["testingUnit"] })}
               columns={3}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              End-to-End Testing
-            </label>
+          <Section id="testingE2E" title="End-to-End Testing" icon={<TestTube size={14} />}>
             <RadioGroup
               options={e2eOptions}
               value={standards.testingE2E}
               onChange={(v) => updateStandards({ testingE2E: v as StandardsData["testingE2E"] })}
               columns={3}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Code Quality Tools
-            </label>
+          <Section id="linting" title="Code Quality Tools" icon={<Wrench size={14} />}>
             <div className="grid grid-cols-2 gap-3">
               {lintingChoices.map((item) => (
                 <Checkbox
@@ -182,38 +196,34 @@ export function StandardsStep() {
                 />
               ))}
             </div>
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Git Commit Strategy
-            </label>
+          <Section id="gitStrategy" title="Git Commit Strategy" icon={<GitBranch size={14} />}>
             <RadioGroup
               options={gitOptions}
               value={standards.gitStrategy}
               onChange={(v) => updateStandards({ gitStrategy: v as StandardsData["gitStrategy"] })}
               columns={2}
             />
-          </div>
+          </Section>
 
           {/* AI Coding Tool */}
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1 dark:text-zinc-300">
-              AI Coding Tool
-            </label>
-            <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
-              We'll generate the config file pre-filled with your architecture decisions.
-            </p>
+          <Section
+            id="aiCodingTool"
+            title="AI Coding Tool"
+            description="We'll generate the config file pre-filled with your architecture decisions."
+            icon={<Bot size={14} />}
+          >
             <RadioGroup
               options={aiToolOptions}
               value={standards.aiCodingTool}
               onChange={(v) => updateStandards({ aiCodingTool: v as StandardsData["aiCodingTool"] })}
               columns={3}
             />
-          </div>
+          </Section>
 
           {/* Advanced: Auth, retry, logging, date */}
-          <Collapsible title="Advanced Options" description="Auth, retry policy, logging, date library">
+          <Collapsible title="Advanced Options" description="Auth, retry policy, logging, date library" icon={<Settings2 size={16} />}>
             <div className="space-y-6 mt-4">
               <div>
                 <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
@@ -262,10 +272,53 @@ export function StandardsStep() {
             </div>
           </Collapsible>
 
+          {/* Quality Targets */}
+          <Collapsible
+            title="Quality Targets"
+            description="Accessibility compliance level and browser support expectations"
+            icon={<Target size={16} />}
+          >
+            <div className="space-y-6 mt-4">
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
+                  Accessibility Target
+                </label>
+                <RadioGroup
+                  options={accessibilityOptions}
+                  value={standards.accessibilityTarget}
+                  onChange={(v) => updateStandards({ accessibilityTarget: v as StandardsData["accessibilityTarget"] })}
+                  columns={3}
+                />
+                {standards.accessibilityTarget === "wcag-aaa" && (
+                  <p className="mt-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-lg px-3 py-2">
+                    WCAG AAA requires 7:1 contrast ratio and strict timing/motion controls — typically required for government or public-sector projects.
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
+                  Browser Support
+                </label>
+                <RadioGroup
+                  options={browserSupportOptions}
+                  value={standards.browserSupport}
+                  onChange={(v) => updateStandards({ browserSupport: v as StandardsData["browserSupport"] })}
+                  columns={2}
+                />
+                {standards.browserSupport === "legacy" && (
+                  <p className="mt-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-lg px-3 py-2">
+                    Legacy support limits use of modern CSS (container queries, :has(), grid subgrid). Verify your styling choices are compatible.
+                  </p>
+                )}
+              </div>
+            </div>
+          </Collapsible>
+
           {/* Team Agreements */}
           <Collapsible
-            title="Team Agreements (Optional)"
+            title="Team Agreements"
             description="Coding standards included in AI_CONTEXT.md as explicit rules"
+            icon={<Users size={16} />}
           >
             <div className="space-y-3 mt-4">
               {teamAgreementItems.map((item) => (
@@ -299,7 +352,7 @@ export function StandardsStep() {
         </div>
 
         {/* ── Quality summary panel ── */}
-        <div className="w-72 shrink-0 sticky top-4">
+        <div className="w-110 shrink-0 sticky top-4">
           <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
             Quality Summary
           </p>

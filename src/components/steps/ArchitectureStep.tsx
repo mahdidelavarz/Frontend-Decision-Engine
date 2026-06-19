@@ -2,8 +2,11 @@
 
 import { useWizardStore } from "@/store";
 import { StepHeader } from "@/components/wizard/StepHeader";
+import { useStepBack } from "@/components/wizard/useStepBack";
 import { RadioGroup } from "@/components/ui/RadioGroup";
+import { Section } from "@/components/ui/Section";
 import { FolderTree } from "@/components/steps/previews/FolderTree";
+import { FolderTree as FolderTreeIcon, FileType2, Link2, KeyRound, Package } from "lucide-react";
 import type { ArchitectureData } from "@/types";
 
 export function isArchitectureComplete(a: ArchitectureData): boolean {
@@ -139,6 +142,7 @@ function FrameworkRulesBox({ framework }: { framework: string }) {
 
 export function ArchitectureStep() {
   const { architecture, updateArchitecture, project } = useWizardStore();
+  const onBack = useStepBack();
 
   return (
     <div>
@@ -146,15 +150,13 @@ export function ArchitectureStep() {
         stepNumber={2}
         title="Architecture"
         description="Define how your codebase is organized. These decisions affect discoverability and maintainability."
+        onBack={onBack}
       />
 
       <div className="flex gap-8 items-start">
         {/* ── Form controls ── */}
-        <div className="flex-1 min-w-0 space-y-8">
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Folder Strategy
-            </label>
+        <div className="flex-1 min-w-0 space-y-10">
+          <Section id="folderStrategy" title="Folder Strategy" icon={<FolderTreeIcon size={14} />}>
             <RadioGroup
               options={folderOptions}
               value={architecture.folderStrategy}
@@ -163,10 +165,11 @@ export function ArchitectureStep() {
               }
               columns={3}
             />
-          </div>
+          </Section>
 
           {/* ── Naming conventions ── */}
-          <div className="space-y-4">
+          <Section id="naming" title="Naming Conventions" icon={<FileType2 size={14} />}>
+            <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-zinc-700 mb-1 dark:text-zinc-300">
                 Component File Naming
@@ -221,12 +224,10 @@ export function ArchitectureStep() {
             {project.framework && (
               <FrameworkRulesBox framework={project.framework} />
             )}
-          </div>
+            </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Path Alias
-            </label>
+          <Section id="aliasRoot" title="Path Alias" icon={<Link2 size={14} />}>
             <RadioGroup
               options={aliasOptions}
               value={architecture.aliasRoot}
@@ -238,12 +239,9 @@ export function ArchitectureStep() {
               }
               columns={4}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Environment Variables
-            </label>
+          <Section id="envStrategy" title="Environment Variables" icon={<KeyRound size={14} />}>
             <RadioGroup
               options={envOptions}
               value={architecture.envStrategy}
@@ -252,12 +250,9 @@ export function ArchitectureStep() {
               }
               columns={2}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Barrel Files (index.ts re-exports)
-            </label>
+          <Section id="barrelFiles" title="Barrel Files (index.ts re-exports)" icon={<Package size={14} />}>
             <RadioGroup
               options={barrelOptions}
               value={architecture.barrelFiles}
@@ -266,11 +261,11 @@ export function ArchitectureStep() {
               }
               columns={3}
             />
-          </div>
+          </Section>
         </div>
 
         {/* ── Live folder tree ── */}
-        <div className="w-72 shrink-0 sticky top-4">
+        <div className="w-110 shrink-0 sticky top-4">
           <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
             Folder Structure
           </p>

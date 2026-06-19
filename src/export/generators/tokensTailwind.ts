@@ -1,5 +1,5 @@
 import type { WizardState } from "@/types";
-import { deriveTokens } from "@/tokens/derive";
+import { deriveTokens, getExportFontStack } from "@/tokens/derive";
 
 export function generateTokensTailwind(state: WizardState): object {
   const tokens = deriveTokens(state.designSystem);
@@ -19,7 +19,7 @@ export function generateTokensTailwind(state: WizardState): object {
   return {
     _comment: "Paste these values into your globals.css @theme block for Tailwind 4",
     ...accentEntries,
-    "--font-sans": tokens.fontFamily,
+    "--font-sans": getExportFontStack(state.designSystem.fontFamily),
     "--font-mono": "ui-monospace, 'Cascadia Code', monospace",
     ...radiusEntries,
     ...shadowEntries,

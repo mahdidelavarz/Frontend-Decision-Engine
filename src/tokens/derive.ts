@@ -69,12 +69,27 @@ const SHADOW_MAP: Record<DesignSystemData["shadowDepth"], Record<string, string>
 
 // ─── Font maps ────────────────────────────────────────────────────────────────
 
+// References the web fonts loaded in layout.tsx (next/font CSS variables) so the
+// live preview renders the real typeface, with graceful fallbacks.
 const FONT_MAP: Record<DesignSystemData["fontFamily"], string> = {
+  geist: "var(--font-geist-sans), 'Geist', system-ui, sans-serif",
+  inter: "var(--font-inter), 'Inter', system-ui, sans-serif",
+  roboto: "var(--font-roboto), 'Roboto', system-ui, sans-serif",
+  system: "system-ui, -apple-system, sans-serif",
+};
+
+// Plain font stacks for the EXPORTED tokens.css — no next/font CSS variables,
+// since those only exist inside this app.
+const FONT_STACK_EXPORT: Record<DesignSystemData["fontFamily"], string> = {
   geist: "'Geist', system-ui, sans-serif",
   inter: "'Inter', system-ui, sans-serif",
   roboto: "'Roboto', system-ui, sans-serif",
   system: "system-ui, -apple-system, sans-serif",
 };
+
+export function getExportFontStack(fontFamily: DesignSystemData["fontFamily"]): string {
+  return FONT_STACK_EXPORT[fontFamily];
+}
 
 // ─── Spacing ─────────────────────────────────────────────────────────────────
 

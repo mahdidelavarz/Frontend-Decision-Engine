@@ -140,10 +140,21 @@ export function FolderTree({ architecture }: Props) {
   const tree = buildTree(architecture);
   const lines = renderTree(tree);
 
-  const aliasHint =
-    architecture.pathAliases && architecture.aliasRoot !== "none"
-      ? `\n// import\nimport { ... } from "${architecture.aliasRoot}/features/auth"`
-      : null;
+  const root = architecture.aliasRoot !== "none" ? architecture.aliasRoot : "@";
+  const showAliases = architecture.pathAliases && architecture.aliasRoot !== "none";
+
+  const aliasMap = showAliases
+    ? [
+        ["components", "src/components/"],
+        ["hooks",      "src/hooks/"],
+        ["lib",        "src/lib/"],
+        ["utils",      "src/utils/"],
+        ["store",      "src/store/"],
+        ["services",   "src/services/"],
+      ]
+    : [];
+
+  const maxAlias = Math.max(...aliasMap.map(([a]) => (`${root}/${a}`).length));
 
   return (
     <div>
@@ -162,7 +173,7 @@ export function FolderTree({ architecture }: Props) {
         <pre style={{ margin: 0, whiteSpace: "pre" }}>
           {lines.join("\n")}
         </pre>
-        {aliasHint && (
+        {showAliases && (
           <pre
             style={{
               margin: "0.6rem 0 0",
@@ -172,7 +183,12 @@ export function FolderTree({ architecture }: Props) {
               color: "#a1a1aa",
             }}
           >
-            {aliasHint}
+            {`// Alias Preview\n`}
+            {aliasMap.map(([alias, target]) => {
+              const key = `${root}/${alias}`;
+              const pad = " ".repeat(Math.max(0, maxAlias - key.length + 2));
+              return `${key}${pad}→  ${target}`;
+            }).join("\n")}
           </pre>
         )}
       </div>

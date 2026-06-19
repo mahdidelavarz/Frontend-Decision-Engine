@@ -10,5 +10,6 @@ export function evaluate(state: CheckState): Violation[] {
       title: rule.title,
       message: rule.message,
       affectedSteps: rule.affectedSteps,
+      field: rule.field,
     }));
 }

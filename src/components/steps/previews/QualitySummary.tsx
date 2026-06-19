@@ -41,7 +41,7 @@ export function QualitySummary({ standards }: Props) {
 
   const hasUnit = standards.testingUnit !== "none";
   const hasE2E = standards.testingE2E !== "none";
-  const hasAuth = standards.authApproach !== "none";
+  const hasAuth = standards.authApproach === "cookie" || standards.authApproach === "jwt";
   const hasMonitoring = standards.logging === "sentry";
 
   const testingLabel = [
@@ -93,11 +93,11 @@ export function QualitySummary({ standards }: Props) {
         <Row label="Git strategy"   value={standards.gitStrategy === "conventional-commits" ? "Conventional" : "None"} ok={standards.gitStrategy === "conventional-commits"} />
         <Row label="Error handling" value={errorLabel[standards.errorHandling]} ok={standards.errorHandling === "hybrid"} />
         <Row label="Monitoring"     value={hasMonitoring ? "Sentry" : standards.logging === "console" ? "Console only" : "None"} ok={hasMonitoring} />
-        <Row label="Authentication" value={hasAuth ? standards.authApproach === "cookie" ? "Cookie (HttpOnly)" : "JWT" : "None (public)"} ok={hasAuth} />
-        <Row label="Retry policy"   value={standards.retryPolicy === "none" ? "None" : standards.retryPolicy === "manual" ? "Manual retry" : "Auto backoff"} ok={standards.retryPolicy !== "none"} />
+        <Row label="Authentication" value={hasAuth ? (standards.authApproach === "cookie" ? "Cookie (HttpOnly)" : "JWT") : standards.authApproach === "none" ? "None (public)" : "Not set"} ok={hasAuth} />
+        <Row label="Retry policy"   value={standards.retryPolicy === "" ? "Not set" : standards.retryPolicy === "none" ? "None" : standards.retryPolicy === "manual" ? "Manual retry" : "Auto backoff"} ok={standards.retryPolicy === "manual" || standards.retryPolicy === "automatic"} />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.45rem 0" }}>
           <span style={{ fontSize: "0.78rem", color: "#52525b" }}>Date library</span>
-          <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "#52525b" }}>{standards.dateLibrary}</span>
+          <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "#52525b" }}>{standards.dateLibrary || "Not set"}</span>
         </div>
       </div>
     </div>

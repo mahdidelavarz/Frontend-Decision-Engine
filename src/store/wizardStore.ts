@@ -33,6 +33,7 @@ const initialState = {
   sharedComponents: defaultSharedComponents,
   projectDna: defaultProjectDna,
   violations: [],
+  focusField: null as string | null,
 };
 
 export const useWizardStore = create<WizardState>()(
@@ -42,6 +43,8 @@ export const useWizardStore = create<WizardState>()(
 
       setStep: (step) =>
         set({ currentStep: step, updatedAt: now() }),
+
+      setFocusField: (field) => set({ focusField: field }),
 
       markStepComplete: (step) =>
         set((s) => ({
@@ -152,6 +155,24 @@ export const useWizardStore = create<WizardState>()(
           };
           delete (state.architecture as unknown as Record<string, unknown>).namingConvention;
           state.schemaVersion = 3;
+        }
+        if (state.schemaVersion < 4) {
+          // Add new fields introduced in schema v4
+          state.project = { ...defaultProject, ...state.project };
+          state.designSystem = { ...defaultDesignSystem, ...state.designSystem };
+          state.standards = { ...defaultStandards, ...state.standards };
+          state.uxPatterns = { ...defaultUXPatterns, ...state.uxPatterns };
+          state.schemaVersion = 4;
+        }
+        if (state.schemaVersion < 5) {
+          // v5: optional fields can now be "" (unselected). Existing chosen
+          // values are preserved; only genuinely missing keys get defaults.
+          state.project = { ...defaultProject, ...state.project };
+          state.designSystem = { ...defaultDesignSystem, ...state.designSystem };
+          state.standards = { ...defaultStandards, ...state.standards };
+          state.uxPatterns = { ...defaultUXPatterns, ...state.uxPatterns };
+          state.projectDna = { ...defaultProjectDna, ...state.projectDna };
+          state.schemaVersion = 5;
         }
       },
     }

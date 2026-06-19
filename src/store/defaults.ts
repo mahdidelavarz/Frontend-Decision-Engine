@@ -11,18 +11,26 @@ import type {
 } from "@/types";
 
 export const defaultProject: ProjectData = {
+  // Main fields — keep recommended defaults
   projectName: "",
   framework: "",
   language: "typescript",
   routing: "",
   stateManagement: [],
   serverState: "none",
-  apiClient: "fetch",
-  apiStyle: "rest",
   formLibrary: "react-hook-form",
   validation: "zod",
   styling: ["tailwind"],
-  packageManager: "npm",
+  // Advanced (collapsible) — start unselected
+  apiClient: "",
+  apiStyle: "",
+  packageManager: "",
+  localization: "",
+  rtlSupport: false,
+  seoStrategy: "",
+  imageHandling: "",
+  deploymentTarget: "",
+  enforcePackageManager: false,
 };
 
 export const defaultArchitecture: ArchitectureData = {
@@ -37,41 +45,52 @@ export const defaultArchitecture: ArchitectureData = {
 };
 
 export const defaultDesignSystem: DesignSystemData = {
+  // Main visual fields — required for the live preview, keep defaults
   accentColorHex: "#3b82f6",
   neutralPalette: "zinc",
   fontFamily: "geist",
   radiusScale: "md",
   spacingBase: 4,
   shadowDepth: "subtle",
-  iconLibrary: "lucide",
+  // Optional (collapsible) — start unselected
+  iconLibrary: "",
+  themeStrategy: "",
 };
 
 export const defaultStandards: StandardsData = {
+  // Main fields — keep recommended defaults
   errorHandling: "toast",
-  retryPolicy: "none",
-  logging: "console",
   testingUnit: "vitest",
   testingE2E: "none",
   linting: ["eslint", "prettier"],
   gitStrategy: "conventional-commits",
-  authApproach: "none",
-  dateLibrary: "native",
   aiCodingTool: "none",
+  // Advanced + Quality Targets (collapsible) — start unselected
+  retryPolicy: "",
+  logging: "",
+  authApproach: "",
+  dateLibrary: "",
+  browserSupport: "",
+  accessibilityTarget: "",
 };
 
 export const defaultUXPatterns: UXPatternsData = {
+  // Main (always visible) — keep recommended defaults
   loadingPattern: "skeleton",
   emptyStateStyle: "icon-text",
   successFeedback: "toast",
   confirmationPattern: "modal",
-  errorState: "toast",
-  searchDebounce: true,
-  paginationStyle: "offset",
-  modalVsDrawer: "modal",
-  fileUpload: "native",
+  // Responsive + Frontend Conventions (collapsible) — start unselected
+  errorState: "",
+  searchDebounce: false,
+  paginationStyle: "",
+  modalVsDrawer: "",
+  fileUpload: "",
   breadcrumbs: false,
-  filteringPattern: "toolbar",
-  mobileNavigation: "hamburger",
+  filteringPattern: "",
+  mobileNavigation: "",
+  layoutStrategy: "",
+  breakpointStrategy: "",
 };
 
 export const defaultTeamAgreements: TeamAgreementsData = {
@@ -89,11 +108,12 @@ export const defaultSharedComponents: SharedComponentsData = {
 };
 
 export const defaultProjectDna: ProjectDnaData = {
-  teamSize: "small",
-  seoImportance: "none",
-  projectScale: "production",
-  complexity: "moderate",
-  longevity: "long",
+  // Project DNA (collapsible) — start unselected
+  teamSize: "",
+  seoImportance: "",
+  projectScale: "",
+  complexity: "",
+  longevity: "",
 };
 
 export const defaultCompletedSteps: StepCompletion = {};

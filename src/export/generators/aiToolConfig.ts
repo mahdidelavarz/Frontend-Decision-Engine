@@ -1,5 +1,10 @@
 import type { WizardState } from "@/types";
 
+/** Join non-empty lines, dropping unselected (omitted) entries. */
+function lines(...items: (string | false | null | undefined)[]): string {
+  return items.filter(Boolean).join("\n");
+}
+
 // Shared content block used by all tool formats
 function buildProjectRules(state: WizardState): string {
   const { project, architecture, standards, uxPatterns, designSystem, teamAgreements, sharedComponents, projectDna } = state;
@@ -28,32 +33,35 @@ function buildProjectRules(state: WizardState): string {
 
   return `# ${project.projectName || "Project"} — AI Coding Instructions
 
-## Project Context
-
-- **Type:** ${projectDna.projectScale} · ${projectDna.teamSize === "solo" ? "Solo developer" : projectDna.teamSize === "small" ? "Small team (2–5)" : "Full team (6+)"}
-- **Complexity:** ${projectDna.complexity} · **Longevity:** ${projectDna.longevity === "long" ? "Long-term maintained" : "Short-lived"}
-- **SEO:** ${projectDna.seoImportance}
+${lines(
+  (projectDna.projectScale || projectDna.teamSize || projectDna.complexity || projectDna.longevity || projectDna.seoImportance) && "## Project Context\n",
+  (projectDna.projectScale || projectDna.teamSize) && `- **Type:** ${[projectDna.projectScale, projectDna.teamSize === "solo" ? "Solo developer" : projectDna.teamSize === "small" ? "Small team (2–5)" : projectDna.teamSize === "team" ? "Full team (6+)" : ""].filter(Boolean).join(" · ")}`,
+  (projectDna.complexity || projectDna.longevity) && `- **Complexity:** ${projectDna.complexity || "—"}${projectDna.longevity ? ` · **Longevity:** ${projectDna.longevity === "long" ? "Long-term maintained" : "Short-lived"}` : ""}`,
+  projectDna.seoImportance && `- **SEO:** ${projectDna.seoImportance}`,
+)}
 
 ## Tech Stack
 
 | Concern | Choice |
 |---|---|
-| Framework | ${project.framework || "Not set"} |
-| Language | ${project.language} |
-| Routing | ${project.routing || "built-in"} |
-| Client state | ${stateStr || "none"} |
-| Server state | ${project.serverState} |
-| API style | ${project.apiStyle} |
-| HTTP client | ${project.apiClient} |
-| Forms | ${project.formLibrary} |
-| Validation | ${project.validation} |
-| Styling | ${project.styling.join(", ") || "none"} |
-| Icons | ${designSystem.iconLibrary} |
-| Unit tests | ${standards.testingUnit} |
-| E2E tests | ${standards.testingE2E} |
-| Linting | ${standards.linting.join(", ") || "none"} |
-| Auth | ${standards.authApproach} |
-| Dates | ${standards.dateLibrary} |
+${lines(
+  `| Framework | ${project.framework || "Not set"} |`,
+  `| Language | ${project.language} |`,
+  `| Routing | ${project.routing || "built-in"} |`,
+  `| Client state | ${stateStr || "none"} |`,
+  `| Server state | ${project.serverState} |`,
+  project.apiStyle && `| API style | ${project.apiStyle} |`,
+  project.apiClient && `| HTTP client | ${project.apiClient} |`,
+  `| Forms | ${project.formLibrary} |`,
+  `| Validation | ${project.validation} |`,
+  `| Styling | ${project.styling.join(", ") || "none"} |`,
+  designSystem.iconLibrary && `| Icons | ${designSystem.iconLibrary} |`,
+  `| Unit tests | ${standards.testingUnit} |`,
+  `| E2E tests | ${standards.testingE2E} |`,
+  `| Linting | ${standards.linting.join(", ") || "none"} |`,
+  standards.authApproach && `| Auth | ${standards.authApproach} |`,
+  standards.dateLibrary && `| Dates | ${standards.dateLibrary} |`,
+)}
 
 ## Architecture
 
@@ -65,15 +73,17 @@ function buildProjectRules(state: WizardState): string {
 
 ## UX Conventions
 
-- Loading state: ${uxPatterns.loadingPattern}
-- Empty states: ${uxPatterns.emptyStateStyle}
-- Error state: ${uxPatterns.errorState}
-- Success feedback: ${uxPatterns.successFeedback}
-- Confirmation: ${uxPatterns.confirmationPattern}
-- Pagination: ${uxPatterns.paginationStyle}
-- Mobile nav: ${uxPatterns.mobileNavigation}
-${uxPatterns.searchDebounce ? "- Always debounce search inputs (300ms)" : ""}
-${uxPatterns.breadcrumbs ? "- Show breadcrumbs on pages deeper than 2 levels" : ""}
+${lines(
+  `- Loading state: ${uxPatterns.loadingPattern}`,
+  `- Empty states: ${uxPatterns.emptyStateStyle}`,
+  uxPatterns.errorState && `- Error state: ${uxPatterns.errorState}`,
+  `- Success feedback: ${uxPatterns.successFeedback}`,
+  `- Confirmation: ${uxPatterns.confirmationPattern}`,
+  uxPatterns.paginationStyle && `- Pagination: ${uxPatterns.paginationStyle}`,
+  uxPatterns.mobileNavigation && `- Mobile nav: ${uxPatterns.mobileNavigation}`,
+  uxPatterns.searchDebounce && "- Always debounce search inputs (300ms)",
+  uxPatterns.breadcrumbs && "- Show breadcrumbs on pages deeper than 2 levels",
+)}
 
 ## Design Tokens
 

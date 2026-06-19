@@ -8,10 +8,23 @@ function pkgInstall(pm: string, packages: string[], dev = false): string {
   return `${cmd} ${flag} ${packages.join(" ")}`.trim();
 }
 
+const ICON_PACKAGES: Record<string, string> = {
+  lucide: "lucide-react",
+  heroicons: "@heroicons/react",
+  tabler: "@tabler/icons-react",
+  phosphor: "@phosphor-icons/react",
+  iconify: "@iconify/react",
+};
+
 function collectDeps(state: WizardState): { prod: string[]; dev: string[] } {
-  const { project, architecture, standards } = state;
+  const { project, architecture, standards, designSystem } = state;
   const prod: string[] = [];
   const dev: string[] = [];
+
+  // Icon library (omitted when unselected, "none", or "material" which uses a font/CDN)
+  if (designSystem.iconLibrary && ICON_PACKAGES[designSystem.iconLibrary]) {
+    prod.push(ICON_PACKAGES[designSystem.iconLibrary]);
+  }
 
   project.stateManagement.forEach((s) => {
     if (s === "zustand") prod.push("zustand");
@@ -45,6 +58,11 @@ function collectDeps(state: WizardState): { prod: string[]; dev: string[] } {
 
   if (standards.dateLibrary === "dayjs") prod.push("dayjs");
   if (standards.dateLibrary === "date-fns") prod.push("date-fns");
+
+  // Localization
+  if (project.localization === "i18next") prod.push("i18next", "react-i18next");
+  if (project.localization === "next-intl") prod.push("next-intl");
+  if (project.localization === "paraglide") prod.push("@inlang/paraglide-js");
 
   // Dev deps
   if (standards.testingUnit === "vitest") {
@@ -115,8 +133,8 @@ function buildFolderPaths(state: WizardState): string[] {
 // ─── Main generator ───────────────────────────────────────────────────────────
 
 export function generateApplyBlueprint(state: WizardState): string {
-  const { project, architecture, standards } = state;
-  const pm = project.packageManager;
+  const { project, architecture, standards, designSystem, sharedComponents } = state;
+  const pm = project.packageManager || "npm";
   const name = project.projectName || "my-app";
   const deps = collectDeps(state);
   const createCmd = frameworkCreateCmd(state);
@@ -132,6 +150,15 @@ export function generateApplyBlueprint(state: WizardState): string {
   const hasHusky = standards.linting.includes("husky");
   const hasBiome = standards.linting.includes("biome");
   const hasPrettier = standards.linting.includes("prettier");
+
+  const aiToolFileMap: Record<string, string> = {
+    "claude-code": ".claude/CLAUDE.md",
+    cursor: ".cursor/rules/project.mdc",
+    copilot: ".github/copilot-instructions.md",
+    windsurf: ".windsurfrules",
+    cline: ".clinerules",
+  };
+  const aiToolPath = aiToolFileMap[standards.aiCodingTool] || null;
 
   return `#!/usr/bin/env node
 // apply-blueprint.js
@@ -187,6 +214,18 @@ function mkdir(dir) {
   if (DRY_RUN) { skip("mkdir " + dir); return; }
   fs.mkdirSync(dir, { recursive: true });
   ok("created: " + dir);
+}
+
+// Move a generated file from the run directory INTO the project, then delete the
+// original so no loose blueprint files are left behind next to apply-blueprint.js.
+function moveInto(srcName, destPath) {
+  const src = path.join(process.cwd(), srcName);
+  if (!fs.existsSync(src)) return;
+  if (DRY_RUN) { skip("move " + srcName + " → " + path.relative(process.cwd(), destPath)); return; }
+  fs.mkdirSync(path.dirname(destPath), { recursive: true });
+  if (!fs.existsSync(destPath)) fs.copyFileSync(src, destPath);
+  fs.unlinkSync(src);
+  ok("moved: " + path.relative(process.cwd(), destPath));
 }
 
 // ─── Summary ─────────────────────────────────────────────────────────────────
@@ -260,29 +299,47 @@ ${project.stateManagement.includes("zustand") ? `  writeIfMissing(
     path.join(srcDir, "store", "index.ts"),
     \`import { create } from "zustand";\\n\\ninterface AppState {\\n  // add your state here\\n}\\n\\nexport const useStore = create<AppState>(() => ({\\n  // initial state\\n}));\\n\`
   );` : ""}
+${sharedComponents.planned.length > 0 ? `
+  // Scaffold planned shared components (from UX Patterns → Shared Components)
+${sharedComponents.planned.map((c) => `  writeIfMissing(
+    path.join(srcDir, "components", "ui", ${JSON.stringify(c + ".tsx")}),
+    \`// ${c} — shared component (planned in your blueprint)\\nexport function ${c}() {\\n  return null; // TODO: implement\\n}\\n\`
+  );`).join("\n")}` : ""}
 
-  console.log("\\n  \\x1b[1mStep 5 — Move documentation\\x1b[0m");
+  console.log("\\n  \\x1b[1mStep 5 — Move blueprint files into the project\\x1b[0m");
   const docsDir = path.join(root, "docs");
   mkdir(docsDir);
-  const docFiles = ["PROJECT_GUIDELINES.md", "AI_CONTEXT.md", "WHY.md"];
-  docFiles.forEach((f) => {
-    const src = path.join(process.cwd(), f);
-    const dest = path.join(docsDir, f);
-    if (fs.existsSync(src) && !fs.existsSync(dest)) {
-      if (DRY_RUN) { skip("copy " + f + " → docs/" + f); }
-      else { fs.copyFileSync(src, dest); ok("moved: docs/" + f); }
-    }
+  // Documentation → <project>/docs/
+  ["PROJECT_GUIDELINES.md", "AI_CONTEXT.md", "WHY.md"].forEach((f) => {
+    moveInto(f, path.join(docsDir, f));
   });
+  // Project root files (README replaces the scaffold's, .gitignore merges conceptually)
+  moveInto("README.md", path.join(root, "BLUEPRINT_README.md"));
+  moveInto("project-config.json", path.join(docsDir, "project-config.json"));
+  moveInto("tokens.tailwind.json", path.join(docsDir, "tokens.tailwind.json"));
+  // Keep the scaffold's own .gitignore; preserve ours as a reference in docs/
+  moveInto(".gitignore", path.join(docsDir, "gitignore.blueprint.txt"));
+${aiToolPath ? `  moveInto(${JSON.stringify(aiToolPath)}, path.join(root, ${JSON.stringify(aiToolPath)}));` : ""}
 
-  console.log("\\n  \\x1b[1mStep 6 — Inject design tokens\\x1b[0m");
+  console.log("\\n  \\x1b[1mStep 6 — Inject design tokens into the project CSS\\x1b[0m");
   const tokensSource = path.join(process.cwd(), "tokens.css");
   const tokensDest   = path.join(srcDir, "tokens.css");
+  let tokensCss = "";
   if (fs.existsSync(tokensSource)) {
-    writeIfMissing(tokensDest, fs.readFileSync(tokensSource, "utf8"));
+    tokensCss = fs.readFileSync(tokensSource, "utf8");
+    moveInto("tokens.css", tokensDest);
   }
-  // Append import to globals.css if it exists
+  // Apply tokens DIRECTLY into the project's globals.css (guarded, idempotent).
   const globalsPath = path.join(srcDir, "app", "globals.css");
-  appendIfMissing(globalsPath, "@import '../tokens.css';\\n", "tokens.css");
+  if (tokensCss) {
+    const marker = "Frontend Decision Engine — design tokens";
+    const block = "\\n/* ── " + marker + " ── */\\n" + tokensCss + "\\n";
+    if (fs.existsSync(globalsPath)) {
+      appendIfMissing(globalsPath, block, marker);
+    } else {
+      writeIfMissing(globalsPath, block);
+    }
+  }
 
   console.log("\\n  \\x1b[1mStep 7 — Apply configuration\\x1b[0m");
 ${alias ? `  // tsconfig.json path aliases
@@ -313,6 +370,22 @@ ${hasConventional && hasHusky ? `  writeIfMissing(
     path.join(root, ".husky", "commit-msg"),
     \`#!/bin/sh\\nnpx --no -- commitlint --edit $1\\n\`
   );` : ""}
+
+  console.log("\\n  \\x1b[1mStep 8 — Deployment & notes\\x1b[0m");
+${project.deploymentTarget === "vercel" ? `  info("Deployment: Vercel — connect your repo at vercel.com or run \`npx vercel\` in the project root");` : ""}
+${project.deploymentTarget === "netlify" ? `  info("Deployment: Netlify — connect your repo at app.netlify.com or run \`npx netlify-cli init\`");` : ""}
+${project.deploymentTarget === "cloudflare-pages" ? `  info("Deployment: Cloudflare Pages — connect via Cloudflare dashboard or \`npx wrangler pages deploy out/\`");` : ""}
+${project.deploymentTarget === "static-hosting" ? `  info("Deployment: Static hosting — upload the \`out/\` directory to your CDN or host after building");` : ""}
+${project.deploymentTarget === "self-hosted" ? `  info("Deployment: Self-hosted — build the project and serve with Node.js, Nginx, or a reverse proxy");` : ""}
+${project.deploymentTarget === "not-decided" ? `  info("Deployment target not yet decided — choose a host and update your CI/CD pipeline accordingly");` : ""}
+${project.enforcePackageManager && project.packageManager ? `  info("Package manager enforced: use ${pm} only — update CI/CD scripts to match");` : ""}
+${project.localization && project.localization !== "none" ? `  info("Localization: ${project.localization} installed — set up your locale files before adding user-facing strings");` : ""}
+${designSystem.iconLibrary && ICON_PACKAGES[designSystem.iconLibrary] ? `  info("Icons: ${ICON_PACKAGES[designSystem.iconLibrary]} installed — import icons individually for best tree-shaking");` : ""}
+${designSystem.iconLibrary === "material" ? `  info("Icons: Material Symbols — add the Google Fonts <link> or @fontsource package; no npm icon package needed");` : ""}
+${standards.accessibilityTarget && standards.accessibilityTarget !== "basic" ? `  info("Accessibility target: ${standards.accessibilityTarget === "wcag-aa" ? "WCAG AA" : "WCAG AAA"} — budget time for audits (axe, Lighthouse) before launch");` : ""}
+${standards.browserSupport === "legacy" ? `  info("Browser support: Legacy — verify your CSS/build targets (browserslist) cover older browsers; Tailwind v4 uses modern CSS");` : ""}
+${designSystem.themeStrategy === "light-dark" || designSystem.themeStrategy === "system" ? `  info("Theme: ${designSystem.themeStrategy} — wire a theme toggle / prefers-color-scheme overrides using the injected CSS tokens");` : ""}
+${sharedComponents.planned.length > 0 ? `  info("Scaffolded ${sharedComponents.planned.length} shared component stub(s) in src/components/ui — implement before building features");` : ""}
 
   console.log("\\n  \\x1b[32m\\x1b[1m✓ Blueprint applied!\\x1b[0m");
   console.log("  cd " + PROJECT);

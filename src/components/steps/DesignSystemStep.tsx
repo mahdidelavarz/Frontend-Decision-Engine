@@ -2,9 +2,14 @@
 
 import { useWizardStore } from "@/store";
 import { StepHeader } from "@/components/wizard/StepHeader";
+import { useStepBack } from "@/components/wizard/useStepBack";
 import { RadioGroup } from "@/components/ui/RadioGroup";
 import { ColorPicker } from "@/components/ui/ColorPicker";
+import { Section } from "@/components/ui/Section";
+import { Collapsible } from "@/components/ui/Collapsible";
+import { Label } from "@/components/ui/Label";
 import { DesignPreview } from "@/components/steps/previews/DesignPreview";
+import { Droplet, Contrast, Type, SquareRoundCorner, Ruler, Layers, Shapes } from "lucide-react";
 import type { DesignSystemData } from "@/types";
 
 export function isDesignSystemComplete(d: DesignSystemData): boolean {
@@ -56,8 +61,16 @@ const iconOptions = [
   { value: "none", label: "None", description: "Custom SVGs only" },
 ];
 
+const themeOptions = [
+  { value: "light-only", label: "Light only", description: "Single light theme" },
+  { value: "dark-only", label: "Dark only", description: "Single dark theme" },
+  { value: "light-dark", label: "Light + Dark", description: "Ship both; user toggles" },
+  { value: "system", label: "Follow system", description: "Auto via prefers-color-scheme" },
+];
+
 export function DesignSystemStep() {
   const { designSystem, updateDesignSystem } = useWizardStore();
+  const onBack = useStepBack();
 
   return (
     <div>
@@ -65,129 +78,122 @@ export function DesignSystemStep() {
         stepNumber={3}
         title="Design System"
         description="Define your visual foundation. These choices generate ready-to-use CSS tokens and a Tailwind config."
+        onBack={onBack}
       />
 
       <div className="flex gap-8 items-start">
         {/* ── Form controls ── */}
-        <div className="flex-1 min-w-0 space-y-8">
-          <div>
+        <div className="flex-1 min-w-0 space-y-10">
+          <Section id="accentColor" title="Accent Color" icon={<Droplet size={14} />}>
             <ColorPicker
-              label="Accent Color"
+              label=""
               value={designSystem.accentColorHex}
               onChange={(hex) => updateDesignSystem({ accentColorHex: hex })}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Neutral Palette
-            </label>
+          <Section id="neutralPalette" title="Neutral Palette" icon={<Contrast size={14} />}>
             <RadioGroup
               options={neutralOptions}
               value={designSystem.neutralPalette}
               onChange={(v) =>
-                updateDesignSystem({
-                  neutralPalette: v as DesignSystemData["neutralPalette"],
-                })
+                updateDesignSystem({ neutralPalette: v as DesignSystemData["neutralPalette"] })
               }
               columns={4}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Font Family
-            </label>
+          <Section id="fontFamily" title="Font Family" icon={<Type size={14} />}>
             <RadioGroup
               options={fontOptions}
               value={designSystem.fontFamily}
               onChange={(v) =>
-                updateDesignSystem({
-                  fontFamily: v as DesignSystemData["fontFamily"],
-                })
+                updateDesignSystem({ fontFamily: v as DesignSystemData["fontFamily"] })
               }
               columns={4}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Border Radius
-            </label>
+          <Section id="radiusScale" title="Border Radius" icon={<SquareRoundCorner size={14} />}>
             <RadioGroup
               options={radiusOptions}
               value={designSystem.radiusScale}
               onChange={(v) =>
-                updateDesignSystem({
-                  radiusScale: v as DesignSystemData["radiusScale"],
-                })
+                updateDesignSystem({ radiusScale: v as DesignSystemData["radiusScale"] })
               }
               columns={3}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Spacing Base Unit
-            </label>
+          <Section id="spacingBase" title="Spacing Base Unit" icon={<Ruler size={14} />}>
             <RadioGroup
               options={spacingOptions}
               value={String(designSystem.spacingBase)}
               onChange={(v) =>
-                updateDesignSystem({
-                  spacingBase: Number(v) as DesignSystemData["spacingBase"],
-                })
+                updateDesignSystem({ spacingBase: Number(v) as DesignSystemData["spacingBase"] })
               }
               columns={4}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-              Shadow Depth
-            </label>
+          <Section id="shadowDepth" title="Shadow Depth" icon={<Layers size={14} />}>
             <RadioGroup
               options={shadowOptions}
               value={designSystem.shadowDepth}
               onChange={(v) =>
-                updateDesignSystem({
-                  shadowDepth: v as DesignSystemData["shadowDepth"],
-                })
+                updateDesignSystem({ shadowDepth: v as DesignSystemData["shadowDepth"] })
               }
               columns={3}
             />
-          </div>
+          </Section>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1 dark:text-zinc-300">
-              Icon Library
-            </label>
-            <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
-              Pick one and stick to it — mixing icon libraries adds visual inconsistency.
-            </p>
-            <RadioGroup
-              options={iconOptions}
-              value={designSystem.iconLibrary}
-              onChange={(v) =>
-                updateDesignSystem({
-                  iconLibrary: v as DesignSystemData["iconLibrary"],
-                })
-              }
-              columns={3}
-            />
-            {designSystem.iconLibrary === "iconify" && (
-              <p className="mt-2 text-xs text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 rounded-lg px-3 py-2">
-                Iconify gives you access to 200,000+ icons via <code>@iconify/react</code>. Make sure your bundler tree-shakes unused icons — import individually, not from the root package.
-              </p>
-            )}
-          </div>
+          {/* Optional: icon library + theme strategy */}
+          <Collapsible
+            title="Icon Library & Theme"
+            description="Pick an icon set and your theme policy — both optional"
+            icon={<Shapes size={16} />}
+          >
+            <div className="space-y-6 mt-4">
+              <div>
+                <Label>Icon Library</Label>
+                <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
+                  Pick one and stick to it — mixing icon libraries adds visual inconsistency.
+                </p>
+                <RadioGroup
+                  options={iconOptions}
+                  value={designSystem.iconLibrary}
+                  onChange={(v) =>
+                    updateDesignSystem({ iconLibrary: v as DesignSystemData["iconLibrary"] })
+                  }
+                  columns={3}
+                />
+                {designSystem.iconLibrary === "iconify" && (
+                  <p className="mt-2 text-xs text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 rounded-lg px-3 py-2">
+                    Iconify gives you access to 200,000+ icons via <code>@iconify/react</code>. Make sure your bundler tree-shakes unused icons — import individually, not from the root package.
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label>Theme Strategy</Label>
+                <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
+                  Project-level decision — not a full dark mode implementation. Documents the intended theme policy.
+                </p>
+                <RadioGroup
+                  options={themeOptions}
+                  value={designSystem.themeStrategy}
+                  onChange={(v) =>
+                    updateDesignSystem({ themeStrategy: v as DesignSystemData["themeStrategy"] })
+                  }
+                  columns={2}
+                />
+              </div>
+            </div>
+          </Collapsible>
         </div>
 
         {/* ── Live preview panel ── */}
-        <div className="w-72 shrink-0 sticky top-4">
-          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-            Live Preview
-          </p>
+        <div className="w-110 shrink-0 sticky top-4">
           <DesignPreview designSystem={designSystem} />
         </div>
       </div>

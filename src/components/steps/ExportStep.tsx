@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useWizardStore } from "@/store";
 import { StepHeader } from "@/components/wizard/StepHeader";
+import { useStepBack } from "@/components/wizard/useStepBack";
+import { AdvisorInline } from "@/components/wizard/AdvisorInline";
 import { FilePreviewModal } from "@/components/wizard/FilePreviewModal";
+import { ReadinessChecklist } from "@/components/steps/ReadinessChecklist";
 import { generateGuidelines } from "@/export/generators/guidelines";
 import { generateAIContext } from "@/export/generators/aiContext";
 import { generateWhy } from "@/export/generators/why";
@@ -88,6 +91,7 @@ function countLines(s: string): number {
 
 export function ExportStep() {
   const state = useWizardStore();
+  const onBack = useStepBack();
   const [previewFile, setPreviewFile] = useState<{ filename: string; content: string } | null>(null);
 
   const fullContent: Record<string, string> = {
@@ -109,7 +113,12 @@ export function ExportStep() {
         stepNumber={7}
         title="Export Blueprint"
         description="Your architecture decisions are ready. Download the ZIP to get all files."
+        onBack={onBack}
       />
+
+      <AdvisorInline />
+
+      <ReadinessChecklist state={state} />
 
       <div className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 mb-6 flex items-center gap-3 dark:border-indigo-800 dark:bg-indigo-950/40">
         <Check size={16} className="text-indigo-600 shrink-0 dark:text-indigo-400" />

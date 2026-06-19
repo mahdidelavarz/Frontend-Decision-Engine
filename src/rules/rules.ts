@@ -10,6 +10,7 @@ export const rules: Rule[] = [
     message:
       "Combining state libraries (e.g. Zustand + Redux Toolkit) creates competing data flows, doubles your bundle size, and confuses new contributors. Pick one and commit.",
     affectedSteps: ["project"],
+    field: "stateManagement",
     check: ({ project }) =>
       project.stateManagement.filter((s) => s !== "none").length > 1,
   },
@@ -20,6 +21,7 @@ export const rules: Rule[] = [
     message:
       "Styled Components or Emotion alongside Tailwind creates two competing style systems that fight over specificity. Choose one approach: utility-first (Tailwind) or component-scoped (CSS-in-JS).",
     affectedSteps: ["project"],
+    field: "styling",
     check: ({ project }) =>
       project.styling.includes("tailwind") &&
       (project.styling.includes("styled-components") ||
@@ -32,6 +34,7 @@ export const rules: Rule[] = [
     message:
       "Three or more styling solutions in one project creates unmaintainable CSS. Settle on one primary system and use it consistently.",
     affectedSteps: ["project"],
+    field: "styling",
     check: ({ project }) => project.styling.length >= 3,
   },
 
@@ -44,6 +47,7 @@ export const rules: Rule[] = [
     message:
       "Formik has no active development and its maintainer has stepped back. React Hook Form is actively maintained, smaller, and has better TypeScript support. TanStack Form is the modern alternative.",
     affectedSteps: ["project"],
+    field: "formLibrary",
     check: ({ project }) => project.formLibrary === "formik",
   },
   {
@@ -53,6 +57,7 @@ export const rules: Rule[] = [
     message:
       "Redux Toolkit stores state in a module-level singleton that cannot work inside React Server Components. If you're using Next.js with the App Router, consider Zustand or Jotai — both support RSC patterns.",
     affectedSteps: ["project"],
+    field: "stateManagement",
     check: ({ project }) =>
       project.stateManagement.includes("redux-toolkit") &&
       project.framework === "next",
@@ -64,6 +69,7 @@ export const rules: Rule[] = [
     message:
       "SWR works best with REST endpoints. For GraphQL, React Query (TanStack Query) with urql or Apollo Client handles query caching, normalization, and subscriptions correctly.",
     affectedSteps: ["project"],
+    field: "serverState",
     check: ({ project }) =>
       project.serverState === "swr" && project.apiStyle === "graphql",
   },
@@ -74,6 +80,7 @@ export const rules: Rule[] = [
     message:
       "Without any tests, every refactor is a gamble. Vitest is fast to set up and works with Vite and Next.js. Even a handful of unit tests on critical utilities pays dividends immediately.",
     affectedSteps: ["standards"],
+    field: "testingUnit",
     check: ({ standards }) =>
       standards.testingUnit === "none" && standards.testingE2E === "none",
   },
@@ -84,6 +91,7 @@ export const rules: Rule[] = [
     message:
       "Without a linter, code style drifts and common bugs go undetected. ESLint with a base Next.js config takes 10 minutes to add and catches real issues before code review.",
     affectedSteps: ["standards"],
+    field: "linting",
     check: ({ standards }) => standards.linting.length === 0,
   },
   {
@@ -93,6 +101,7 @@ export const rules: Rule[] = [
     message:
       "tRPC ships a first-party @trpc/react-query adapter. Adding SWR on top creates a redundant caching layer. Use tRPC's built-in React Query integration and remove SWR.",
     affectedSteps: ["project"],
+    field: "serverState",
     check: ({ project }) =>
       project.apiStyle === "trpc" && project.serverState === "swr",
   },
@@ -103,6 +112,7 @@ export const rules: Rule[] = [
     message:
       "Enterprise-scale projects without enforced linting accumulate style drift and subtle bugs across contributors. Add at minimum ESLint + Prettier to establish a baseline.",
     affectedSteps: ["standards"],
+    field: "linting",
     check: ({ standards, projectDna }) =>
       projectDna.projectScale === "enterprise" && standards.linting.length === 0,
   },
@@ -116,6 +126,7 @@ export const rules: Rule[] = [
     message:
       "E2E tests give you confidence but run slowly (minutes per suite). Unit tests run in milliseconds and catch logic bugs much earlier in the development loop. Consider adding both.",
     affectedSteps: ["standards"],
+    field: "testingUnit",
     check: ({ standards }) =>
       standards.testingE2E !== "none" && standards.testingUnit === "none",
   },
@@ -126,6 +137,7 @@ export const rules: Rule[] = [
     message:
       "Barrel files (index.ts re-exports) add value in feature-based structures where they define public API boundaries. In a simple flat folder, they add indirection without benefit and can cause circular import issues.",
     affectedSteps: ["architecture"],
+    field: "barrelFiles",
     check: ({ architecture }) =>
       architecture.barrelFiles === "always" &&
       architecture.folderStrategy === "simple",
@@ -137,6 +149,7 @@ export const rules: Rule[] = [
     message:
       "Using raw dotenv with Next.js means missing env vars cause silent runtime failures. t3-env validates your env schema at build time and gives TypeScript types — worth the 5-minute setup.",
     affectedSteps: ["architecture"],
+    field: "envStrategy",
     check: ({ architecture, project }) =>
       architecture.envStrategy === "dotenv-only" &&
       project.framework === "next",
@@ -168,6 +181,7 @@ export const rules: Rule[] = [
     message:
       "E2E tests are valuable long-term but have high setup and maintenance cost. For MVPs, unit tests give faster feedback. Consider adding E2E once core flows stabilize.",
     affectedSteps: ["standards"],
+    field: "testingE2E",
     check: ({ standards, projectDna }) =>
       projectDna.projectScale === "mvp" && standards.testingE2E !== "none",
   },
@@ -190,6 +204,7 @@ export const rules: Rule[] = [
     message:
       "You're using Vite + React without a routing library. For multi-page apps, React Router v7 or TanStack Router are the standard choices. If this is a single-view app, select 'None' to make it explicit.",
     affectedSteps: ["project"],
+    field: "routing",
     check: ({ project }) =>
       project.framework === "vite-react" && project.routing === "",
   },
@@ -200,6 +215,7 @@ export const rules: Rule[] = [
     message:
       "TanStack Router offers fully type-safe routes, built-in search param validation, and a modern file-based routing option. If your app has complex routing or many query params, it's worth the switch from React Router.",
     affectedSteps: ["project"],
+    field: "routing",
     check: ({ project }) =>
       project.framework === "vite-react" && project.routing === "react-router",
   },
@@ -210,6 +226,7 @@ export const rules: Rule[] = [
     message:
       "You have no unit tests configured. Vitest is the fastest option for Vite and Next.js projects — it reuses your existing Vite config, runs in milliseconds, and has first-class TypeScript support.",
     affectedSteps: ["standards"],
+    field: "testingUnit",
     check: ({ standards, project }) =>
       standards.testingUnit === "none" &&
       (project.framework === "vite-react" || project.framework === "next"),
@@ -221,6 +238,7 @@ export const rules: Rule[] = [
     message:
       "Redux Toolkit works well for large teams with shared state across many features. For a solo project, Zustand gives you the same result with far less boilerplate and no reducer/action ceremony.",
     affectedSteps: ["project"],
+    field: "stateManagement",
     check: ({ project, projectDna }) =>
       projectDna.teamSize === "solo" &&
       project.stateManagement.includes("redux-toolkit"),
@@ -235,6 +253,59 @@ export const rules: Rule[] = [
     check: ({ designSystem }) => designSystem.iconLibrary === "iconify",
   },
 
+  // ─── v1.1 Additions ──────────────────────────────────────────────────────
+
+  {
+    id: "rtl-logical-css",
+    severity: "recommendation",
+    title: "RTL enabled — use logical CSS properties",
+    message:
+      "With RTL support enabled, avoid hardcoded directional styles (left/right, margin-left, padding-right). Use logical CSS properties instead: margin-inline-start, padding-inline-end, inset-inline-start. Tailwind 4 supports these natively.",
+    affectedSteps: ["project"],
+    check: ({ project }) => project.rtlSupport === true,
+  },
+  {
+    id: "localization-rtl-reminder",
+    severity: "info",
+    title: "Localization enabled — consider RTL languages",
+    message:
+      "You have a localization library selected but RTL support is off. If any target locale uses a right-to-left script (Arabic, Hebrew, Persian, Urdu), enable RTL support in Project → Internationalization.",
+    affectedSteps: ["project"],
+    check: ({ project }) =>
+      project.localization !== "none" &&
+      project.localization !== "" &&
+      project.rtlSupport === false,
+  },
+  {
+    id: "advanced-seo-vite",
+    severity: "recommendation",
+    title: "Advanced SEO typically requires SSR",
+    message:
+      "Advanced SEO (sitemap, structured data, dynamic meta) needs server-side rendering to be effective. Vite + React is a client-only SPA — search engines may not index dynamic content. Consider Next.js or Remix if SEO is a priority.",
+    affectedSteps: ["project"],
+    check: ({ project }) =>
+      project.seoStrategy === "advanced" && project.framework === "vite-react",
+  },
+  {
+    id: "legacy-browser-tailwind-v4",
+    severity: "info",
+    title: "Legacy browser support with Tailwind v4",
+    message:
+      "Tailwind CSS v4 uses modern CSS features (cascade layers, color-mix(), container queries) that are not supported in IE11 or older browsers. Verify your legacy target list against Tailwind v4's browser baseline.",
+    affectedSteps: ["project", "standards"],
+    check: ({ project, standards }) =>
+      standards.browserSupport === "legacy" && project.styling.includes("tailwind"),
+  },
+  {
+    id: "wcag-aaa-expectation",
+    severity: "info",
+    title: "WCAG AAA is a very high accessibility bar",
+    message:
+      "WCAG AAA requires 7:1 color contrast and strict controls for timing, motion, and reading level. It is typically required for government or public-sector projects. Make sure your color palette and component designs can meet this standard.",
+    affectedSteps: ["standards", "design-system"],
+    check: ({ standards }) => standards.accessibilityTarget === "wcag-aaa",
+  },
+
   // ─── Excellent Matches ────────────────────────────────────────────────────
 
   {
@@ -244,6 +315,7 @@ export const rules: Rule[] = [
     message:
       "Zustand works seamlessly with Next.js App Router and React Server Components. It's lightweight, has zero boilerplate, and its localStorage persist middleware pairs perfectly with client components.",
     affectedSteps: ["project"],
+    field: "stateManagement",
     check: ({ project }) =>
       project.framework === "next" &&
       project.stateManagement.includes("zustand") &&
@@ -256,6 +328,7 @@ export const rules: Rule[] = [
     message:
       "This combination gives you performant, uncontrolled form inputs with runtime-validated, TypeScript-inferred schema validation. The @hookform/resolvers package connects them with one line.",
     affectedSteps: ["project"],
+    field: "formLibrary",
     check: ({ project }) =>
       project.formLibrary === "react-hook-form" &&
       project.validation === "zod",
@@ -270,5 +343,15 @@ export const rules: Rule[] = [
     check: ({ project, designSystem }) =>
       designSystem.iconLibrary === "lucide" &&
       project.styling.includes("tailwind"),
+  },
+  {
+    id: "next-intl-nextjs-excellent",
+    severity: "excellent-match",
+    title: "next-intl + Next.js App Router is an excellent combination",
+    message:
+      "next-intl is purpose-built for the Next.js App Router — it supports server components, integrates with Next.js routing, and provides type-safe message access without client-side overhead.",
+    affectedSteps: ["project"],
+    check: ({ project }) =>
+      project.localization === "next-intl" && project.framework === "next",
   },
 ];

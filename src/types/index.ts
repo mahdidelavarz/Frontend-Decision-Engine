@@ -1,4 +1,4 @@
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 5;
 
 export type WizardStep =
   | "home"
@@ -43,14 +43,22 @@ export interface ProjectData {
     "zustand" | "redux-toolkit" | "jotai" | "context-only" | "none"
   >;
   serverState: "react-query" | "swr" | "none";
-  apiClient: "axios" | "fetch";
-  apiStyle: "rest" | "graphql" | "trpc";
+  // Optional (collapsible) — "" means the user left it unselected
+  apiClient: "axios" | "fetch" | "";
+  apiStyle: "rest" | "graphql" | "trpc" | "";
   formLibrary: "react-hook-form" | "formik" | "tanstack-form" | "none";
   validation: "zod" | "yup" | "none";
   styling: Array<
     "tailwind" | "css-modules" | "styled-components" | "emotion" | "scss"
   >;
-  packageManager: "npm" | "pnpm" | "yarn" | "bun";
+  // Optional (collapsible) — "" means the user left it unselected
+  packageManager: "npm" | "pnpm" | "yarn" | "bun" | "";
+  localization: "none" | "i18next" | "next-intl" | "paraglide" | "";
+  rtlSupport: boolean;
+  seoStrategy: "not-needed" | "basic" | "advanced" | "";
+  imageHandling: "framework-default" | "native-img" | "external-optimization" | "not-important" | "";
+  deploymentTarget: "vercel" | "netlify" | "cloudflare-pages" | "static-hosting" | "self-hosted" | "not-decided" | "";
+  enforcePackageManager: boolean;
 }
 
 export interface ArchitectureData {
@@ -74,20 +82,25 @@ export interface DesignSystemData {
   radiusScale: "none" | "sm" | "md" | "lg" | "full";
   spacingBase: 4 | 8 | 12 | 16;
   shadowDepth: "flat" | "subtle" | "elevated";
-  iconLibrary: "lucide" | "heroicons" | "tabler" | "phosphor" | "material" | "iconify" | "none";
+  // Optional (collapsible) — "" means the user left it unselected
+  iconLibrary: "lucide" | "heroicons" | "tabler" | "phosphor" | "material" | "iconify" | "none" | "";
+  themeStrategy: "light-only" | "dark-only" | "light-dark" | "system" | "";
 }
 
 export interface StandardsData {
   errorHandling: "inline" | "toast" | "hybrid";
-  retryPolicy: "none" | "manual" | "automatic";
-  logging: "console" | "sentry" | "none";
+  retryPolicy: "none" | "manual" | "automatic" | "";
+  logging: "console" | "sentry" | "none" | "";
   testingUnit: "vitest" | "jest" | "none";
   testingE2E: "playwright" | "cypress" | "none";
   linting: Array<"eslint" | "biome" | "prettier" | "husky">;
   gitStrategy: "conventional-commits" | "none";
-  authApproach: "jwt" | "cookie" | "none";
-  dateLibrary: "native" | "dayjs" | "date-fns";
+  // Optional (collapsible) — "" means unselected
+  authApproach: "jwt" | "cookie" | "none" | "";
+  dateLibrary: "native" | "dayjs" | "date-fns" | "";
   aiCodingTool: "claude-code" | "cursor" | "copilot" | "windsurf" | "cline" | "none";
+  browserSupport: "modern" | "legacy" | "";
+  accessibilityTarget: "basic" | "wcag-aa" | "wcag-aaa" | "";
 }
 
 export interface UXPatternsData {
@@ -96,15 +109,17 @@ export interface UXPatternsData {
   emptyStateStyle: "illustration" | "icon-text" | "text-only";
   successFeedback: "toast" | "snackbar" | "redirect";
   confirmationPattern: "modal" | "inline" | "none";
-  // Frontend conventions (progressive disclosure)
-  errorState: "inline" | "full-page" | "toast";
+  // Frontend conventions (progressive disclosure) — "" means unselected
+  errorState: "inline" | "full-page" | "toast" | "";
   searchDebounce: boolean;
-  paginationStyle: "offset" | "infinite-scroll" | "cursor";
-  modalVsDrawer: "modal" | "drawer" | "context";
-  fileUpload: "native" | "drag-drop" | "none";
+  paginationStyle: "offset" | "infinite-scroll" | "cursor" | "";
+  modalVsDrawer: "modal" | "drawer" | "context" | "";
+  fileUpload: "native" | "drag-drop" | "none" | "";
   breadcrumbs: boolean;
-  filteringPattern: "sidebar" | "toolbar" | "inline";
-  mobileNavigation: "bottom-bar" | "hamburger" | "drawer";
+  filteringPattern: "sidebar" | "toolbar" | "inline" | "";
+  mobileNavigation: "bottom-bar" | "hamburger" | "drawer" | "";
+  layoutStrategy: "mobile-first" | "desktop-first" | "";
+  breakpointStrategy: "framework-defaults" | "custom" | "";
 }
 
 export interface TeamAgreementsData {
@@ -134,11 +149,12 @@ export interface SharedComponentsData {
 }
 
 export interface ProjectDnaData {
-  teamSize: "solo" | "small" | "team";
-  seoImportance: "none" | "moderate" | "critical";
-  projectScale: "mvp" | "production" | "enterprise";
-  complexity: "simple" | "moderate" | "complex";
-  longevity: "short" | "long";
+  // All optional (collapsible) — "" means unselected
+  teamSize: "solo" | "small" | "team" | "";
+  seoImportance: "none" | "moderate" | "critical" | "";
+  projectScale: "mvp" | "production" | "enterprise" | "";
+  complexity: "simple" | "moderate" | "complex" | "";
+  longevity: "short" | "long" | "";
 }
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
@@ -155,6 +171,8 @@ export interface Violation {
   title: string;
   message: string;
   affectedSteps: WizardStep[];
+  /** Optional anchor id of the specific field this maps to — enables jump-to-field */
+  field?: string;
 }
 
 export type CheckState = {
@@ -173,6 +191,8 @@ export interface Rule {
   title: string;
   message: string;
   affectedSteps: WizardStep[];
+  /** Optional anchor id of the specific field this rule maps to */
+  field?: string;
   check: (state: CheckState) => boolean;
 }
 
@@ -204,8 +224,12 @@ export interface WizardState {
   // Computed
   violations: Violation[];
 
+  // Transient UI (not persisted) — drives jump-to-field highlight
+  focusField: string | null;
+
   // Actions
   setStep: (step: WizardStep) => void;
+  setFocusField: (field: string | null) => void;
   markStepComplete: (step: WizardStep) => void;
   updateProject: (data: Partial<ProjectData>) => void;
   updateArchitecture: (data: Partial<ArchitectureData>) => void;

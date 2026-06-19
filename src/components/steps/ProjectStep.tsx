@@ -2,10 +2,26 @@
 
 import { useWizardStore } from "@/store";
 import { StepHeader } from "@/components/wizard/StepHeader";
+import { useStepBack } from "@/components/wizard/useStepBack";
 import { RadioGroup } from "@/components/ui/RadioGroup";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
+import { Section } from "@/components/ui/Section";
 import { Collapsible } from "@/components/ui/Collapsible";
+import {
+  Fingerprint,
+  Type,
+  Boxes,
+  Route,
+  Layers,
+  Database,
+  ClipboardList,
+  ShieldCheck,
+  Palette,
+  Settings2,
+  Globe,
+} from "lucide-react";
 import type { ProjectData, ProjectDnaData } from "@/types";
 
 export function isProjectComplete(p: ProjectData): boolean {
@@ -74,6 +90,35 @@ const pkgOptions = [
   { value: "yarn", label: "Yarn" },
 ];
 
+const deploymentOptions = [
+  { value: "vercel", label: "Vercel", description: "Zero-config, Next.js native" },
+  { value: "netlify", label: "Netlify", description: "JAMstack, forms, edge" },
+  { value: "cloudflare-pages", label: "Cloudflare Pages", description: "Global CDN, Workers" },
+  { value: "static-hosting", label: "Static hosting", description: "S3, GitHub Pages, etc." },
+  { value: "self-hosted", label: "Self-hosted", description: "Own server / VPS" },
+  { value: "not-decided", label: "Not decided yet", description: "Decide later" },
+];
+
+const seoStrategyOptions = [
+  { value: "not-needed", label: "Not needed", description: "Internal / auth-gated app" },
+  { value: "basic", label: "Basic SEO", description: "Title, meta, OG tags" },
+  { value: "advanced", label: "Advanced SEO", description: "Sitemap, structured data, SSR" },
+];
+
+const imageHandlingOptions = [
+  { value: "framework-default", label: "Framework default", description: "next/image, etc." },
+  { value: "native-img", label: "Native <img>", description: "No abstraction layer" },
+  { value: "external-optimization", label: "External optimization", description: "Cloudinary, Imgix, etc." },
+  { value: "not-important", label: "Not important", description: "Minimal images in this app" },
+];
+
+const localizationOptions = [
+  { value: "none", label: "None", description: "Single language only" },
+  { value: "i18next", label: "i18next", description: "Most widely used i18n library" },
+  { value: "next-intl", label: "next-intl", description: "Next.js App Router native" },
+  { value: "paraglide", label: "Paraglide", description: "Type-safe, compile-time i18n" },
+];
+
 const teamSizeOptions = [
   { value: "solo", label: "Solo", description: "Just me" },
   { value: "small", label: "Small team", description: "2–5 developers" },
@@ -103,12 +148,19 @@ const longevityOptions = [
   { value: "long", label: "Long-term", description: "Maintained for years" },
 ];
 
-function dnaSummary(dna: ProjectDnaData): string {
-  const scale = { mvp: "MVP", production: "production app", enterprise: "enterprise system" }[dna.projectScale];
-  const team = { solo: "for you alone", small: "for a small team", team: "for a full team" }[dna.teamSize];
-  const longevity = dna.longevity === "long" ? "maintained long-term" : "short-lived";
-  const seo = dna.seoImportance === "critical" ? " with critical SEO needs" : dna.seoImportance === "moderate" ? " with some SEO requirements" : "";
-  return `A ${longevity} ${scale}${seo}, ${team}.`;
+function dnaSummary(dna: ProjectDnaData): string | null {
+  const parts: string[] = [];
+  if (dna.longevity) parts.push(dna.longevity === "long" ? "maintained long-term" : "short-lived");
+  if (dna.projectScale) {
+    parts.push({ mvp: "MVP", production: "production app", enterprise: "enterprise system" }[dna.projectScale]!);
+  }
+  if (dna.seoImportance === "critical") parts.push("with critical SEO needs");
+  else if (dna.seoImportance === "moderate") parts.push("with some SEO requirements");
+  if (dna.teamSize) {
+    parts.push({ solo: "for you alone", small: "for a small team", team: "for a full team" }[dna.teamSize]!);
+  }
+  if (parts.length === 0) return null;
+  return `A ${parts.join(", ")}.`;
 }
 
 // Frameworks that handle routing themselves — hide routing picker for these
@@ -116,6 +168,7 @@ const FRAMEWORK_HAS_ROUTING = new Set(["next", "remix", "astro", "sveltekit"]);
 
 export function ProjectStep() {
   const { project, projectDna, updateProject, updateProjectDna } = useWizardStore();
+  const onBack = useStepBack();
 
   const toggleStyling = (val: string) => {
     const current = project.styling as string[];
@@ -134,6 +187,7 @@ export function ProjectStep() {
   };
 
   const showRouting = project.framework === "vite-react";
+  const dna = dnaSummary(projectDna);
 
   return (
     <div>
@@ -141,14 +195,15 @@ export function ProjectStep() {
         stepNumber={1}
         title="Project Setup"
         description="Choose your core technology stack. These decisions affect every layer of the project."
+        onBack={onBack}
       />
 
-      <div className="space-y-8">
-        {/* ── Project DNA ── */}
+      <div className="space-y-10">
+        {/* ── Project DNA (optional) ── */}
         <Collapsible
           title="Project DNA"
-          description="Shape recommendations without locking your choices"
-          defaultOpen={true}
+          description="Shape recommendations without locking your choices — leave blank to skip"
+          icon={<Fingerprint size={16} />}
         >
           <div className="space-y-6 mt-4">
             <div>
@@ -196,25 +251,25 @@ export function ProjectStep() {
                 columns={2}
               />
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg px-3 py-2">
-              {dnaSummary(projectDna)}
-            </p>
+            {dna && (
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg px-3 py-2">
+                {dna}
+              </p>
+            )}
           </div>
         </Collapsible>
 
         {/* Project name */}
-        <div>
-          <Label required>Project Name</Label>
+        <Section id="projectName" title="Project Name" required>
           <Input
             placeholder="my-awesome-app"
             value={project.projectName}
             onChange={(e) => updateProject({ projectName: e.target.value })}
           />
-        </div>
+        </Section>
 
         {/* Language */}
-        <div>
-          <Label>Language</Label>
+        <Section id="language" title="Language" icon={<Type size={14} />}>
           <RadioGroup
             options={[
               { value: "typescript", label: "TypeScript", description: "Strongly recommended", recommended: true },
@@ -224,45 +279,47 @@ export function ProjectStep() {
             onChange={(v) => updateProject({ language: v as ProjectData["language"] })}
             columns={2}
           />
-        </div>
+        </Section>
 
         {/* Framework */}
-        <div>
-          <Label required>Framework</Label>
+        <Section id="framework" title="Framework" required icon={<Boxes size={14} />}>
           <RadioGroup
             options={frameworks}
             value={project.framework}
             onChange={(v) => {
               updateProject({ framework: v as ProjectData["framework"] });
-              // Clear routing when switching to a framework with built-in routing
               if (FRAMEWORK_HAS_ROUTING.has(v)) {
                 updateProject({ routing: "none" });
               }
             }}
             columns={3}
           />
-        </div>
+        </Section>
 
         {/* Routing (only for Vite + React) */}
         {showRouting && (
-          <div>
-            <Label>Routing Library</Label>
-            <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
-              Vite + React has no built-in router — choose one.
-            </p>
+          <Section
+            id="routing"
+            title="Routing Library"
+            description="Vite + React has no built-in router — choose one."
+            icon={<Route size={14} />}
+          >
             <RadioGroup
               options={routingOptions}
               value={project.routing}
               onChange={(v) => updateProject({ routing: v as ProjectData["routing"] })}
               columns={3}
             />
-          </div>
+          </Section>
         )}
 
         {/* Client state */}
-        <div>
-          <Label>Client State Management</Label>
-          <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">Select all that apply (pick one for clarity)</p>
+        <Section
+          id="stateManagement"
+          title="Client State Management"
+          description="Select all that apply (pick one for clarity)"
+          icon={<Layers size={14} />}
+        >
           <RadioGroup
             options={stateOptions}
             value={project.stateManagement}
@@ -270,45 +327,46 @@ export function ProjectStep() {
             multi
             columns={3}
           />
-        </div>
+        </Section>
 
         {/* Server state */}
-        <div>
-          <Label>Server State / Data Fetching</Label>
+        <Section id="serverState" title="Server State / Data Fetching" icon={<Database size={14} />}>
           <RadioGroup
             options={serverStateOptions}
             value={project.serverState}
             onChange={(v) => updateProject({ serverState: v as ProjectData["serverState"] })}
             columns={3}
           />
-        </div>
+        </Section>
 
         {/* Forms */}
-        <div>
-          <Label>Form Library</Label>
+        <Section id="formLibrary" title="Form Library" icon={<ClipboardList size={14} />}>
           <RadioGroup
             options={formOptions}
             value={project.formLibrary}
             onChange={(v) => updateProject({ formLibrary: v as ProjectData["formLibrary"] })}
             columns={2}
           />
-        </div>
+        </Section>
 
         {/* Validation */}
-        <div>
-          <Label>Schema Validation</Label>
+        <Section id="validation" title="Schema Validation" icon={<ShieldCheck size={14} />}>
           <RadioGroup
             options={validationOptions}
             value={project.validation}
             onChange={(v) => updateProject({ validation: v as ProjectData["validation"] })}
             columns={3}
           />
-        </div>
+        </Section>
 
         {/* Styling */}
-        <div>
-          <Label>Styling Approach</Label>
-          <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">Select primary (and only secondary if truly needed)</p>
+        <Section
+          id="styling"
+          title="Styling Approach"
+          required
+          description="Select primary (and only secondary if truly needed)"
+          icon={<Palette size={14} />}
+        >
           <RadioGroup
             options={stylingOptions}
             value={project.styling}
@@ -316,10 +374,14 @@ export function ProjectStep() {
             multi
             columns={3}
           />
-        </div>
+        </Section>
 
-        {/* Advanced options */}
-        <Collapsible title="Advanced Options" description="API style, HTTP client, package manager">
+        {/* Advanced options (optional) */}
+        <Collapsible
+          title="Advanced Options"
+          description="API style, HTTP client, package manager, deployment, SEO, images"
+          icon={<Settings2 size={16} />}
+        >
           <div className="space-y-6 mt-4">
             <div>
               <Label>API Style</Label>
@@ -349,6 +411,79 @@ export function ProjectStep() {
                 value={project.packageManager}
                 onChange={(v) => updateProject({ packageManager: v as ProjectData["packageManager"] })}
                 columns={4}
+              />
+              <div className="mt-2">
+                <Checkbox
+                  label="Enforce this package manager"
+                  description="Document in guidelines and AI context — team must not use others"
+                  checked={project.enforcePackageManager}
+                  onChange={() => updateProject({ enforcePackageManager: !project.enforcePackageManager })}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Deployment Target</Label>
+              <RadioGroup
+                options={deploymentOptions}
+                value={project.deploymentTarget}
+                onChange={(v) => updateProject({ deploymentTarget: v as ProjectData["deploymentTarget"] })}
+                columns={3}
+              />
+            </div>
+            <div>
+              <Label>SEO Strategy</Label>
+              <RadioGroup
+                options={seoStrategyOptions}
+                value={project.seoStrategy}
+                onChange={(v) => updateProject({ seoStrategy: v as ProjectData["seoStrategy"] })}
+                columns={3}
+              />
+            </div>
+            <div>
+              <Label>Image Handling</Label>
+              <RadioGroup
+                options={imageHandlingOptions}
+                value={project.imageHandling}
+                onChange={(v) => updateProject({ imageHandling: v as ProjectData["imageHandling"] })}
+                columns={2}
+              />
+            </div>
+          </div>
+        </Collapsible>
+
+        {/* Internationalization (optional) */}
+        <Collapsible
+          title="Internationalization"
+          description="Localization library and RTL language support"
+          icon={<Globe size={16} />}
+        >
+          <div className="space-y-6 mt-4">
+            <div>
+              <Label>Localization Library</Label>
+              <RadioGroup
+                options={localizationOptions}
+                value={project.localization}
+                onChange={(v) => updateProject({ localization: v as ProjectData["localization"] })}
+                columns={2}
+              />
+              {project.localization === "next-intl" && project.framework === "next" && (
+                <p className="mt-2 text-xs text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg px-3 py-2">
+                  next-intl is built for the Next.js App Router — native support for server components and routing.
+                </p>
+              )}
+              {project.localization === "next-intl" && project.framework && project.framework !== "next" && (
+                <p className="mt-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-lg px-3 py-2">
+                  next-intl is optimized for Next.js — consider i18next for other frameworks.
+                </p>
+              )}
+            </div>
+            <div>
+              <Label>RTL Support</Label>
+              <Checkbox
+                label="Project must support right-to-left languages"
+                description="Arabic, Hebrew, Persian, Urdu — requires logical CSS properties (margin-inline-start, not margin-left)"
+                checked={project.rtlSupport}
+                onChange={() => updateProject({ rtlSupport: !project.rtlSupport })}
               />
             </div>
           </div>

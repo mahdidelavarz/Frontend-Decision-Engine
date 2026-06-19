@@ -177,6 +177,51 @@ function NoConfirmation() {
   );
 }
 
+// ── Error state examples ─────────────────────────────────────────────────────
+
+function ToastError() {
+  return (
+    <div style={{
+      background: "#7f1d1d", color: "#fff", borderRadius: 8, padding: "0.55rem 0.85rem",
+      display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.82rem", width: "fit-content",
+    }}>
+      <span style={{ color: "#fca5a5" }}>✕</span>
+      Something went wrong. Please try again.
+    </div>
+  );
+}
+
+function InlineError() {
+  return (
+    <div>
+      <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 500, color: "#3f3f46", marginBottom: "0.3rem" }}>
+        Email address
+      </label>
+      <input
+        readOnly
+        value="not-an-email"
+        style={{ width: "100%", padding: "0.4rem 0.65rem", borderRadius: 6, border: "1px solid #ef4444", fontSize: "0.82rem", boxSizing: "border-box", outline: "none", color: "#18181b", background: "#fff" }}
+      />
+      <p style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.72rem", color: "#dc2626", margin: "0.3rem 0 0" }}>
+        <span>⚠</span> Enter a valid email address.
+      </p>
+    </div>
+  );
+}
+
+function FullPageError() {
+  return (
+    <div style={{ textAlign: "center", padding: "1rem 0.75rem", border: "1px dashed #fca5a5", borderRadius: 8, background: "#fef2f2" }}>
+      <div style={{ fontSize: "1.6rem", marginBottom: "0.3rem" }}>😵</div>
+      <p style={{ fontWeight: 700, fontSize: "0.95rem", color: "#991b1b", margin: "0 0 0.15rem" }}>500 — Something broke</p>
+      <p style={{ fontSize: "0.75rem", color: "#b91c1c", margin: "0 0 0.6rem" }}>We hit an unexpected error. Try reloading the page.</p>
+      <button style={{ background: "#dc2626", color: "#fff", border: "none", borderRadius: 6, padding: "0.3rem 0.85rem", fontSize: "0.78rem", cursor: "default" }}>
+        Reload
+      </button>
+    </div>
+  );
+}
+
 // ── Section wrapper ──────────────────────────────────────────────────────────
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -217,6 +262,17 @@ export function UXExamples({ uxPatterns }: Props) {
         {uxPatterns.confirmationPattern === "modal"  && <ModalConfirmation />}
         {uxPatterns.confirmationPattern === "inline" && <InlineConfirmation />}
         {uxPatterns.confirmationPattern === "none"   && <NoConfirmation />}
+      </Section>
+
+      <Section title="Error State">
+        {uxPatterns.errorState === "toast"     && <ToastError />}
+        {uxPatterns.errorState === "inline"    && <InlineError />}
+        {uxPatterns.errorState === "full-page" && <FullPageError />}
+        {!uxPatterns.errorState && (
+          <p style={{ fontSize: "0.78rem", color: "#a1a1aa", fontStyle: "italic", margin: 0 }}>
+            Choose an error display in Frontend Conventions to preview it here.
+          </p>
+        )}
       </Section>
     </div>
   );

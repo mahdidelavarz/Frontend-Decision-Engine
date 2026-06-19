@@ -79,7 +79,7 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
         />
 
         <main className="flex-1 overflow-y-auto px-8 py-6 bg-white dark:bg-zinc-950">
-          <div className="max-w-2xl mx-auto">{children}</div>
+          <div className="mx-auto">{children}</div>
         </main>
       </div>
 

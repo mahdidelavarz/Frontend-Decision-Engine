@@ -72,9 +72,15 @@ This document explains the rationale behind each architectural decision. It exis
   // Project DNA rationale
   const dnaLines = dnaRationale(state);
   if (dnaLines) {
+    const contextSummary = [
+      projectDna.projectScale,
+      projectDna.teamSize,
+      projectDna.complexity && `${projectDna.complexity} complexity`,
+      projectDna.longevity && (projectDna.longevity === "long" ? "long-term" : "short-lived"),
+    ].filter(Boolean).join(" · ");
     sections.push(`## Project Context
 
-${projectDna.projectScale} · ${projectDna.teamSize} · ${projectDna.complexity} complexity · ${projectDna.longevity === "long" ? "long-term" : "short-lived"}
+${contextSummary}
 
 ${dnaLines}
 `);
@@ -127,6 +133,62 @@ ${testingRationale[standards.testingUnit] || "No rationale available."}
     sections.push(`## E2E Testing: ${standards.testingE2E}
 
 ${testingRationale[standards.testingE2E] || "No rationale available."}
+`);
+  }
+
+  // Theme strategy
+  const themeRationale: Record<string, string> = {
+    "light-only": "A single light theme keeps the design system simple and avoids the engineering cost of maintaining two token sets. Appropriate when the user base is known and dark mode is not expected.",
+    "dark-only": "A dark-only theme suits developer tools, creative applications, and contexts where users prefer low-brightness interfaces.",
+    "light-dark": "Shipping both light and dark themes provides the best user experience but requires maintaining two sets of semantic color tokens and testing both states.",
+    system: "Following the system preference (prefers-color-scheme) is the most user-respectful approach — the UI adapts automatically without requiring a manual toggle.",
+  };
+  if (state.designSystem.themeStrategy) {
+    sections.push(`## Theme Strategy: ${state.designSystem.themeStrategy}
+
+${themeRationale[state.designSystem.themeStrategy] || ""}
+`);
+  }
+
+  // Accessibility
+  const a11yRationale: Record<string, string> = {
+    basic: "Basic accessibility ensures the project is usable by the broadest audience without the overhead of full WCAG auditing. Semantic HTML and keyboard navigation are the minimum bar.",
+    "wcag-aa": "WCAG AA is the international standard for most commercial and public-facing applications. It requires 4.5:1 contrast ratio for normal text and full keyboard navigation.",
+    "wcag-aaa": "WCAG AAA is the highest accessibility standard, required for government, healthcare, and public-sector applications. It sets stricter contrast (7:1), timing, and motion requirements.",
+  };
+  if (state.standards.accessibilityTarget) {
+    sections.push(`## Accessibility Target: ${state.standards.accessibilityTarget}
+
+${a11yRationale[state.standards.accessibilityTarget] || ""}
+`);
+  }
+
+  // Deployment
+  const deployRationale: Record<string, string> = {
+    vercel: "Vercel was chosen for its zero-configuration deployments, preview environments per pull request, and native Next.js optimizations. It's the best choice for Next.js and React projects.",
+    netlify: "Netlify was chosen for its straightforward CI/CD pipeline, built-in form handling, and excellent support for static sites and JAMstack architectures.",
+    "cloudflare-pages": "Cloudflare Pages was chosen for its global CDN performance, generous free tier, and tight integration with Cloudflare Workers for edge functions.",
+    "static-hosting": "Static hosting (S3, GitHub Pages, or a CDN) was chosen for maximum simplicity and portability. The built output is a directory of files with no server dependency.",
+    "self-hosted": "Self-hosting was chosen for full infrastructure control, data residency requirements, or existing server resources.",
+    "not-decided": "Deployment target has not been decided yet. Choosing early avoids late-stage build or routing surprises.",
+  };
+  if (state.project.deploymentTarget && state.project.deploymentTarget !== "not-decided") {
+    sections.push(`## Deployment Target: ${state.project.deploymentTarget}
+
+${deployRationale[state.project.deploymentTarget] || ""}
+`);
+  }
+
+  // Localization
+  const localeRationale: Record<string, string> = {
+    "i18next": "i18next is the most widely adopted localization library in the JavaScript ecosystem, with extensive plugin support, pluralisation, and interpolation. Framework-agnostic.",
+    "next-intl": "next-intl was built specifically for Next.js App Router — it supports server components, integrates with Next.js routing, and provides type-safe messages without client-side overhead.",
+    paraglide: "Paraglide offers compile-time i18n with full type safety — messages are typed, unused messages are tree-shaken, and there is no runtime overhead for string lookup.",
+  };
+  if (state.project.localization && state.project.localization !== "none") {
+    sections.push(`## Localization: ${state.project.localization}
+
+${localeRationale[state.project.localization] || ""}
 `);
   }
 
