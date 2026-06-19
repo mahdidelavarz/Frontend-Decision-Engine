@@ -97,7 +97,7 @@ export function UXPatternsStep() {
         {/* ── Form controls ── */}
         <div className="flex-1 min-w-0 space-y-8">
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Loading State Pattern
             </label>
             <RadioGroup
@@ -113,7 +113,7 @@ export function UXPatternsStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Empty State Style
             </label>
             <RadioGroup
@@ -129,7 +129,7 @@ export function UXPatternsStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Success Feedback
             </label>
             <RadioGroup
@@ -145,7 +145,7 @@ export function UXPatternsStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Destructive Action Confirmation
             </label>
             <RadioGroup

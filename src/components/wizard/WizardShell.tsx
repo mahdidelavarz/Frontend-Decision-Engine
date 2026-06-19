@@ -9,6 +9,7 @@ import { STEP_ORDER } from "@/types";
 import type { WizardStep } from "@/types";
 import { triggerZipDownload } from "@/export";
 import { Cpu } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface WizardShellProps {
   children: React.ReactNode;
@@ -51,19 +52,22 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
   };
 
   return (
-    <div className="flex h-screen flex-col bg-white overflow-hidden">
+    <div className="flex h-screen flex-col bg-white overflow-hidden dark:bg-zinc-950">
       {/* Top bar */}
-      <header className="flex items-center justify-between border-b border-zinc-100 px-6 py-3 bg-white z-10">
+      <header className="flex items-center justify-between border-b border-zinc-100 px-6 py-3 bg-white z-10 dark:bg-zinc-950 dark:border-zinc-800">
         <div className="flex items-center gap-2">
           <Cpu size={18} className="text-indigo-600" />
-          <span className="text-sm font-semibold text-zinc-800">
+          <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
             Frontend Decision Engine
           </span>
           {projectName && (
-            <span className="text-sm text-zinc-400">— {projectName}</span>
+            <span className="text-sm text-zinc-400 dark:text-zinc-500">— {projectName}</span>
           )}
         </div>
-        <AdvisorPanel violations={violations} onNavigate={setStep} />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <AdvisorPanel violations={violations} onNavigate={setStep} />
+        </div>
       </header>
 
       {/* Body */}
@@ -74,7 +78,7 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
           onNavigate={setStep}
         />
 
-        <main className="flex-1 overflow-y-auto px-8 py-6 bg-white">
+        <main className="flex-1 overflow-y-auto px-8 py-6 bg-white dark:bg-zinc-950">
           <div className="max-w-2xl mx-auto">{children}</div>
         </main>
       </div>

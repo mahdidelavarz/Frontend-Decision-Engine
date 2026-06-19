@@ -145,7 +145,7 @@ export function ProjectStep() {
         {/* Client state */}
         <div>
           <Label>Client State Management</Label>
-          <p className="text-xs text-zinc-400 mb-2">Select all that apply (pick one for clarity)</p>
+          <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">Select all that apply (pick one for clarity)</p>
           <RadioGroup
             options={stateOptions}
             value={project.stateManagement}
@@ -216,7 +216,7 @@ export function ProjectStep() {
         {/* Styling */}
         <div>
           <Label>Styling Approach</Label>
-          <p className="text-xs text-zinc-400 mb-2">Select primary (and only secondary if truly needed)</p>
+          <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">Select primary (and only secondary if truly needed)</p>
           <RadioGroup
             options={stylingOptions}
             value={project.styling}

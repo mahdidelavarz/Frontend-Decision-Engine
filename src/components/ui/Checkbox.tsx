@@ -17,11 +17,11 @@ export function Checkbox({ label, description, className, ...props }: CheckboxPr
         />
       </div>
       <div>
-        <span className="text-sm font-medium text-zinc-800 group-hover:text-zinc-900">
+        <span className="text-sm font-medium text-zinc-800 group-hover:text-zinc-900 dark:text-zinc-200 dark:group-hover:text-zinc-100">
           {label}
         </span>
         {description && (
-          <p className="text-xs text-zinc-500 mt-0.5">{description}</p>
+          <p className="text-xs text-zinc-500 mt-0.5 dark:text-zinc-400">{description}</p>
         )}
       </div>
     </label>

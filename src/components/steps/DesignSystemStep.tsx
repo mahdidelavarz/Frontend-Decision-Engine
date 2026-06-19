@@ -69,7 +69,7 @@ export function DesignSystemStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Neutral Palette
             </label>
             <RadioGroup
@@ -85,7 +85,7 @@ export function DesignSystemStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Font Family
             </label>
             <RadioGroup
@@ -101,7 +101,7 @@ export function DesignSystemStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Border Radius
             </label>
             <RadioGroup
@@ -117,7 +117,7 @@ export function DesignSystemStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Spacing Base Unit
             </label>
             <RadioGroup
@@ -133,7 +133,7 @@ export function DesignSystemStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Shadow Depth
             </label>
             <RadioGroup

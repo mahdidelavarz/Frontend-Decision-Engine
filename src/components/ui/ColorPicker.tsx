@@ -42,7 +42,7 @@ export function ColorPicker({ value, onChange, label, className }: ColorPickerPr
   return (
     <div className={cn("space-y-2", className)}>
       {label && (
-        <span className="block text-sm font-medium text-zinc-700">{label}</span>
+        <span className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">{label}</span>
       )}
       <div className="flex items-center gap-2">
         <div className="relative">
@@ -50,7 +50,7 @@ export function ColorPicker({ value, onChange, label, className }: ColorPickerPr
             type="color"
             value={isValidHex(value) ? value : "#3b82f6"}
             onChange={(e) => handleNativeChange(e.target.value)}
-            className="h-9 w-9 rounded-lg border border-zinc-200 cursor-pointer p-0.5 bg-white"
+            className="h-9 w-9 rounded-lg border border-zinc-200 cursor-pointer p-0.5 bg-white dark:border-zinc-700 dark:bg-zinc-900"
             title="Pick a color"
           />
         </div>
@@ -62,7 +62,7 @@ export function ColorPicker({ value, onChange, label, className }: ColorPickerPr
             if (!isValidHex(inputVal)) setInputVal(value);
           }}
           placeholder="#3b82f6"
-          className="w-28 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-sm font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-28 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-sm font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
         />
       </div>
       <div className="flex flex-wrap gap-1.5">
@@ -77,7 +77,7 @@ export function ColorPicker({ value, onChange, label, className }: ColorPickerPr
             title={preset}
             className={cn(
               "h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
-              value === preset ? "border-zinc-900 scale-110" : "border-transparent"
+              value === preset ? "border-zinc-900 scale-110 dark:border-zinc-100" : "border-transparent"
             )}
             style={{ backgroundColor: preset }}
           />

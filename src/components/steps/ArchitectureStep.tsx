@@ -3,7 +3,6 @@
 import { useWizardStore } from "@/store";
 import { StepHeader } from "@/components/wizard/StepHeader";
 import { RadioGroup } from "@/components/ui/RadioGroup";
-import { Switch } from "@/components/ui/Switch";
 import { FolderTree } from "@/components/steps/previews/FolderTree";
 import type { ArchitectureData } from "@/types";
 
@@ -100,7 +99,7 @@ export function ArchitectureStep() {
         {/* ── Form controls ── */}
         <div className="flex-1 min-w-0 space-y-8">
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Folder Strategy
             </label>
             <RadioGroup
@@ -116,7 +115,7 @@ export function ArchitectureStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               File Naming Convention
             </label>
             <RadioGroup
@@ -132,7 +131,7 @@ export function ArchitectureStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Path Alias
             </label>
             <RadioGroup
@@ -149,7 +148,7 @@ export function ArchitectureStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Environment Variables
             </label>
             <RadioGroup
@@ -165,7 +164,7 @@ export function ArchitectureStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
               Barrel Files (index.ts re-exports)
             </label>
             <RadioGroup

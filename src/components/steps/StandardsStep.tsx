@@ -88,7 +88,7 @@ export function StandardsStep() {
       {/* ── Form controls ── */}
       <div className="flex-1 min-w-0 space-y-8">
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             Error Handling Strategy
           </label>
           <RadioGroup
@@ -100,7 +100,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             API Retry Policy
           </label>
           <RadioGroup
@@ -112,7 +112,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             Production Logging / Error Tracking
           </label>
           <RadioGroup
@@ -124,7 +124,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             Unit Testing
           </label>
           <RadioGroup
@@ -136,7 +136,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             End-to-End Testing
           </label>
           <RadioGroup
@@ -148,7 +148,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             Code Quality Tools
           </label>
           <div className="grid grid-cols-2 gap-3">
@@ -165,7 +165,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             Git Commit Strategy
           </label>
           <RadioGroup
@@ -177,7 +177,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             Authentication Approach
           </label>
           <RadioGroup
@@ -189,7 +189,7 @@ export function StandardsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
             Date / Time Library
           </label>
           <RadioGroup

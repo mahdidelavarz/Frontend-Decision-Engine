@@ -55,7 +55,7 @@ export function PreviewStep() {
         {/* ── Accent color palette ── */}
         <section>
           <SectionTitle>Accent Color Scale</SectionTitle>
-          <div className="flex rounded-xl overflow-hidden border border-zinc-100">
+          <div className="flex rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800">
             {SHADE_KEYS.map((step) => (
               <div
                 key={step}
@@ -72,18 +72,18 @@ export function PreviewStep() {
             ))}
           </div>
           <div className="flex justify-between px-1 mt-1">
-            <span className="text-[10px] text-zinc-400 font-mono">{tokens.accent["50"]}</span>
-            <span className="text-[10px] text-zinc-400 font-mono">{tokens.accent["900"]}</span>
+            <span className="text-[10px] text-zinc-400 font-mono dark:text-zinc-500">{tokens.accent["50"]}</span>
+            <span className="text-[10px] text-zinc-400 font-mono dark:text-zinc-500">{tokens.accent["900"]}</span>
           </div>
         </section>
 
         {/* ── WCAG contrast table ── */}
         <section>
           <SectionTitle>Accessibility — WCAG Contrast</SectionTitle>
-          <div className="rounded-xl border border-zinc-100 overflow-hidden">
+          <div className="rounded-xl border border-zinc-100 overflow-hidden dark:border-zinc-800">
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-zinc-50 text-zinc-500 font-medium">
+                <tr className="bg-zinc-50 text-zinc-500 font-medium dark:bg-zinc-800/60 dark:text-zinc-400">
                   <th className="text-left px-3 py-2">Shade</th>
                   <th className="text-left px-3 py-2">Hex</th>
                   <th className="text-center px-3 py-2">vs White</th>
@@ -97,9 +97,9 @@ export function PreviewStep() {
                   const onWhite = getWCAGLevel(getContrastRatio(hex, "#ffffff"));
                   const onBlack = getWCAGLevel(getContrastRatio(hex, "#000000"));
                   return (
-                    <tr key={shade} className={i % 2 === 0 ? "bg-white" : "bg-zinc-50/50"}>
-                      <td className="px-3 py-1.5 font-mono text-zinc-600">{shade}</td>
-                      <td className="px-3 py-1.5 font-mono text-zinc-500">{hex}</td>
+                    <tr key={shade} className={i % 2 === 0 ? "bg-white dark:bg-zinc-900" : "bg-zinc-50/50 dark:bg-zinc-800/30"}>
+                      <td className="px-3 py-1.5 font-mono text-zinc-600 dark:text-zinc-400">{shade}</td>
+                      <td className="px-3 py-1.5 font-mono text-zinc-500 dark:text-zinc-400">{hex}</td>
                       <td className="px-3 py-1.5 text-center">
                         <WCAGBadge level={onWhite} />
                       </td>
@@ -114,7 +114,7 @@ export function PreviewStep() {
                 })}
               </tbody>
             </table>
-            <div className="px-3 py-2 bg-zinc-50 border-t border-zinc-100 text-[10px] text-zinc-400">
+            <div className="px-3 py-2 bg-zinc-50 border-t border-zinc-100 text-[10px] text-zinc-400 dark:bg-zinc-800/60 dark:border-zinc-800">
               AA ≥ 4.5 : 1 (normal text) · AAA ≥ 7 : 1 (enhanced)
             </div>
           </div>
@@ -124,16 +124,16 @@ export function PreviewStep() {
         <section>
           <SectionTitle>Typography — {FONT_LABEL[designSystem.fontFamily]}</SectionTitle>
           <div
-            className="rounded-xl border border-zinc-100 p-5 space-y-3 bg-white"
+            className="rounded-xl border border-zinc-100 p-5 space-y-3 bg-white dark:bg-zinc-900 dark:border-zinc-800"
             style={{ fontFamily: "var(--pv-font)" }}
           >
-            <p className="text-3xl font-bold text-zinc-900 leading-tight">The quick brown fox</p>
-            <p className="text-xl font-semibold text-zinc-800">Architecture decisions matter</p>
-            <p className="text-base text-zinc-600 leading-relaxed">
+            <p className="text-3xl font-bold text-zinc-900 leading-tight dark:text-zinc-100">The quick brown fox</p>
+            <p className="text-xl font-semibold text-zinc-800 dark:text-zinc-200">Architecture decisions matter</p>
+            <p className="text-base text-zinc-600 leading-relaxed dark:text-zinc-400">
               Frontend Decision Engine helps you choose the right tools before writing a single line of code. Body text at 16px.
             </p>
-            <p className="text-sm text-zinc-500">Small text — labels, captions, metadata.</p>
-            <code className="text-xs font-mono text-indigo-700 bg-indigo-50 px-2 py-1 rounded">
+            <p className="text-sm text-zinc-500 dark:text-zinc-500">Small text — labels, captions, metadata.</p>
+            <code className="text-xs font-mono text-indigo-700 bg-indigo-50 px-2 py-1 rounded dark:text-indigo-400 dark:bg-indigo-950/50">
               {`const engine = new DecisionEngine({ typed: true })`}
             </code>
           </div>
@@ -142,7 +142,7 @@ export function PreviewStep() {
         {/* ── Component gallery ── */}
         <section>
           <SectionTitle>Component Gallery</SectionTitle>
-          <div className="rounded-xl border border-zinc-100 p-5 space-y-5 bg-white" style={{ fontFamily: "var(--pv-font)" }}>
+          <div className="rounded-xl border border-zinc-100 p-5 space-y-5 bg-white dark:bg-zinc-900 dark:border-zinc-800" style={{ fontFamily: "var(--pv-font)" }}>
 
             {/* Buttons */}
             <div>
@@ -231,10 +231,10 @@ export function PreviewStep() {
           <SectionTitle>Radius &amp; Shadow</SectionTitle>
           <div className="grid grid-cols-3 gap-3">
             {(["sm","md","lg"] as const).map((key) => (
-              <div key={key} className="bg-white p-4 flex flex-col items-center gap-1.5" style={{ borderRadius: tokens.radius[key], boxShadow: tokens.shadow[key], border: "1px solid #e4e4e7" }}>
+              <div key={key} className="bg-white p-4 flex flex-col items-center gap-1.5 dark:bg-zinc-900 dark:border-zinc-700" style={{ borderRadius: tokens.radius[key], boxShadow: tokens.shadow[key], border: "1px solid #e4e4e7" }}>
                 <div className="h-8 w-8" style={{ borderRadius: tokens.radius[key], backgroundColor: tokens.accent["500"] }} />
-                <span className="text-xs text-zinc-500">radius-{key}</span>
-                <span className="text-[10px] font-mono text-zinc-400">{tokens.radius[key]}</span>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">radius-{key}</span>
+                <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500">{tokens.radius[key]}</span>
               </div>
             ))}
           </div>
@@ -243,7 +243,7 @@ export function PreviewStep() {
         {/* ── Spacing scale ── */}
         <section>
           <SectionTitle>Spacing Scale — base {designSystem.spacingBase}px</SectionTitle>
-          <div className="flex items-end gap-2 bg-white rounded-xl border border-zinc-100 p-4">
+          <div className="flex items-end gap-2 bg-white rounded-xl border border-zinc-100 p-4 dark:bg-zinc-900 dark:border-zinc-800">
             {Object.entries(tokens.spacing).map(([key, val]) => (
               <div key={key} className="flex flex-col items-center gap-1">
                 <div className="rounded" style={{ width: val, height: val, backgroundColor: tokens.accent["400"], minWidth: "4px", minHeight: "4px", maxWidth: "48px", maxHeight: "48px" }} />
@@ -263,9 +263,9 @@ export function PreviewStep() {
               { label: "Success",      value: uxPatterns.successFeedback },
               { label: "Confirmation", value: uxPatterns.confirmationPattern === "none" ? "Immediate (no confirm)" : uxPatterns.confirmationPattern },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-white rounded-lg border border-zinc-100 p-3">
+              <div key={label} className="bg-white rounded-lg border border-zinc-100 p-3 dark:bg-zinc-900 dark:border-zinc-800">
                 <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mb-0.5">{label}</p>
-                <p className="text-sm font-medium text-zinc-800 capitalize">{value}</p>
+                <p className="text-sm font-medium text-zinc-800 capitalize dark:text-zinc-200">{value}</p>
               </div>
             ))}
           </div>
@@ -274,7 +274,7 @@ export function PreviewStep() {
         {/* ── Standards summary ── */}
         <section>
           <SectionTitle>Standards at a Glance</SectionTitle>
-          <div className="bg-white rounded-xl border border-zinc-100 divide-y divide-zinc-100">
+          <div className="bg-white rounded-xl border border-zinc-100 divide-y divide-zinc-100 dark:bg-zinc-900 dark:border-zinc-800 dark:divide-zinc-800">
             {[
               { label: "Unit testing",    value: standards.testingUnit },
               { label: "E2E testing",     value: standards.testingE2E },
@@ -285,7 +285,7 @@ export function PreviewStep() {
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between items-center px-4 py-2.5">
                 <span className="text-sm text-zinc-500">{label}</span>
-                <span className="text-sm font-medium text-zinc-800 capitalize">{value}</span>
+                <span className="text-sm font-medium text-zinc-800 capitalize dark:text-zinc-200">{value}</span>
               </div>
             ))}
           </div>
@@ -297,7 +297,7 @@ export function PreviewStep() {
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm font-semibold text-zinc-700 mb-3">{children}</h3>;
+  return <h3 className="text-sm font-semibold text-zinc-700 mb-3 dark:text-zinc-300">{children}</h3>;
 }
 
 function WCAGBadge({ level }: { level: "AAA" | "AA" | "FAIL" }) {

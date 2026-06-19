@@ -14,10 +14,10 @@ export function Switch({ checked, onChange, label, description, disabled }: Swit
       {(label || description) && (
         <div>
           {label && (
-            <span className="text-sm font-medium text-zinc-800">{label}</span>
+            <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{label}</span>
           )}
           {description && (
-            <p className="text-xs text-zinc-500">{description}</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">{description}</p>
           )}
         </div>
       )}
@@ -33,7 +33,7 @@ export function Switch({ checked, onChange, label, description, disabled }: Swit
           onClick={() => !disabled && onChange(!checked)}
           className={cn(
             "h-5 w-9 rounded-full transition-colors",
-            checked ? "bg-indigo-600" : "bg-zinc-200",
+            checked ? "bg-indigo-600" : "bg-zinc-200 dark:bg-zinc-700",
             disabled && "opacity-50 cursor-not-allowed"
           )}
         />

@@ -32,7 +32,7 @@ export function StepFooter({
   const isPreview = currentStep === "preview";
 
   return (
-    <div className="border-t border-zinc-100 bg-white px-6 py-4 flex items-center justify-between gap-4">
+    <div className="border-t border-zinc-100 bg-white px-6 py-4 flex items-center justify-between gap-4 dark:border-zinc-800 dark:bg-zinc-950">
       <Button
         variant="ghost"
         size="sm"
