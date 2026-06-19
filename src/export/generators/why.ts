@@ -45,8 +45,21 @@ const testingRationale: Record<string, string> = {
   cypress: "Cypress was chosen for its excellent developer experience, real-time test runner UI, and large community. Best for teams new to E2E testing.",
 };
 
+const dnaRationale = (state: WizardState): string => {
+  const { projectDna } = state;
+  const lines: string[] = [];
+  if (projectDna.teamSize === "solo") lines.push("Solo developer — decisions favour simplicity and low ceremony over scalability patterns.");
+  if (projectDna.teamSize === "team") lines.push("Full team — decisions favour consistency, tooling enforcement, and clear conventions over developer speed.");
+  if (projectDna.projectScale === "mvp") lines.push("MVP scale — we prioritise shipping speed; some tooling (E2E tests, schema validation) can be added later.");
+  if (projectDna.projectScale === "enterprise") lines.push("Enterprise scale — we invest upfront in linting, testing, and strict conventions to reduce long-term maintenance cost.");
+  if (projectDna.seoImportance === "critical") lines.push("SEO is critical — framework choice and rendering strategy were weighted towards server-side rendering.");
+  if (projectDna.longevity === "short") lines.push("Short-lived project — we kept the dependency count low to minimise long-term maintenance burden.");
+  if (projectDna.longevity === "long") lines.push("Long-term project — we invested in stronger foundations (type safety, testing, linting) that pay off over a multi-year horizon.");
+  return lines.join("\n");
+};
+
 export function generateWhy(state: WizardState): string {
-  const { project, standards } = state;
+  const { project, standards, projectDna } = state;
   const sections: string[] = [];
 
   sections.push(`# Why — ${project.projectName || "This Project"}
@@ -55,6 +68,17 @@ This document explains the rationale behind each architectural decision. It exis
 
 ---
 `);
+
+  // Project DNA rationale
+  const dnaLines = dnaRationale(state);
+  if (dnaLines) {
+    sections.push(`## Project Context
+
+${projectDna.projectScale} · ${projectDna.teamSize} · ${projectDna.complexity} complexity · ${projectDna.longevity === "long" ? "long-term" : "short-lived"}
+
+${dnaLines}
+`);
+  }
 
   if (project.framework) {
     sections.push(`## Framework: ${project.framework}

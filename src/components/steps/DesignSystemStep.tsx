@@ -46,6 +46,16 @@ const shadowOptions = [
   { value: "elevated", label: "Elevated", description: "Material-style depth" },
 ];
 
+const iconOptions = [
+  { value: "lucide", label: "Lucide", description: "Clean, consistent, tree-shakeable", recommended: true },
+  { value: "heroicons", label: "Heroicons", description: "Tailwind team's icons" },
+  { value: "tabler", label: "Tabler Icons", description: "500+ open-source icons" },
+  { value: "phosphor", label: "Phosphor", description: "Flexible, multi-weight" },
+  { value: "material", label: "Material Symbols", description: "Google's icon system" },
+  { value: "iconify", label: "Iconify", description: "200k+ icons, universal adapter" },
+  { value: "none", label: "None", description: "Custom SVGs only" },
+];
+
 export function DesignSystemStep() {
   const { designSystem, updateDesignSystem } = useWizardStore();
 
@@ -146,6 +156,30 @@ export function DesignSystemStep() {
               }
               columns={3}
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1 dark:text-zinc-300">
+              Icon Library
+            </label>
+            <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
+              Pick one and stick to it — mixing icon libraries adds visual inconsistency.
+            </p>
+            <RadioGroup
+              options={iconOptions}
+              value={designSystem.iconLibrary}
+              onChange={(v) =>
+                updateDesignSystem({
+                  iconLibrary: v as DesignSystemData["iconLibrary"],
+                })
+              }
+              columns={3}
+            />
+            {designSystem.iconLibrary === "iconify" && (
+              <p className="mt-2 text-xs text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 rounded-lg px-3 py-2">
+                Iconify gives you access to 200,000+ icons via <code>@iconify/react</code>. Make sure your bundler tree-shakes unused icons — import individually, not from the root package.
+              </p>
+            )}
           </div>
         </div>
 

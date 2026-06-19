@@ -9,6 +9,7 @@ import { generateTokensCss } from "./generators/tokensCss";
 import { generateTokensTailwind } from "./generators/tokensTailwind";
 import { generateGitignore } from "./generators/gitignore";
 import { generateApplyBlueprint } from "./generators/applyBlueprint";
+import { generateAiToolConfig } from "./generators/aiToolConfig";
 
 export async function triggerZipDownload(state: WizardState): Promise<void> {
   const JSZip = (await import("jszip")).default;
@@ -23,6 +24,12 @@ export async function triggerZipDownload(state: WizardState): Promise<void> {
   zip.file("tokens.tailwind.json", JSON.stringify(generateTokensTailwind(state), null, 2));
   zip.file(".gitignore", generateGitignore(state));
   zip.file("apply-blueprint.js", generateApplyBlueprint(state));
+
+  // AI coding tool config file (conditional on tool selection)
+  const aiConfig = generateAiToolConfig(state);
+  if (aiConfig) {
+    zip.file(aiConfig.path, aiConfig.content);
+  }
 
   const blob = await zip.generateAsync({ type: "blob" });
   const url = URL.createObjectURL(blob);

@@ -1,7 +1,7 @@
 import type { WizardState } from "@/types";
 
 export function generateAIContext(state: WizardState): string {
-  const { project, architecture, standards, uxPatterns, designSystem } = state;
+  const { project, architecture, standards, uxPatterns, designSystem, teamAgreements, sharedComponents, projectDna } = state;
 
   const doNotUse: string[] = [];
   if (!project.stateManagement.includes("redux-toolkit")) doNotUse.push("Redux / Redux Toolkit");
@@ -16,9 +16,16 @@ export function generateAIContext(state: WizardState): string {
   if (standards.testingUnit !== "jest") doNotUse.push("Jest");
   if (standards.testingUnit !== "vitest") doNotUse.push("Vitest");
 
-  const stateStr = project.stateManagement.length
-    ? project.stateManagement.join(", ")
-    : "None";
+  const agreements: string[] = [];
+  if (teamAgreements.noAny) agreements.push("NEVER use TypeScript `any` — use `unknown` or proper types");
+  if (teamAgreements.preferInterfaces) agreements.push("ALWAYS use `interface` for object type definitions, not `type`");
+  if (teamAgreements.namedExports) agreements.push("ALWAYS use named exports — no default exports");
+  if (teamAgreements.hooksNaming) agreements.push("ALL custom hooks MUST start with `use`");
+  if (teamAgreements.componentOrganization) agreements.push("File structure order MUST be: type definitions → component function → exports");
+  if (teamAgreements.importOrdering) agreements.push("Import order: node built-ins → external → internal alias → relative");
+  if (teamAgreements.maxFileLines) agreements.push(`Files MUST NOT exceed ${teamAgreements.maxFileLines} lines`);
+
+  const stateStr = project.stateManagement.filter((s) => s !== "none").join(", ") || "None";
 
   return `# AI Context — ${project.projectName || "Project"}
 
@@ -27,11 +34,18 @@ When generating code, follow these decisions strictly. Do not introduce unlisted
 
 ---
 
+## Project Profile
+
+- **Type:** ${projectDna.projectScale} · ${projectDna.teamSize === "solo" ? "Solo developer" : projectDna.teamSize === "small" ? "Small team" : "Full team"}
+- **Longevity:** ${projectDna.longevity === "long" ? "Long-term maintained" : "Short-lived"} · **Complexity:** ${projectDna.complexity}
+- **SEO:** ${projectDna.seoImportance}
+
 ## Stack
 
 - **Framework:** ${project.framework || "Not specified"}
-- **Language:** ${project.language === "typescript" ? "TypeScript — always use proper types, avoid \`any\`" : "JavaScript"}
+- **Language:** ${project.language === "typescript" ? "TypeScript — always use proper types, avoid `any`" : "JavaScript"}
 - **Package Manager:** ${project.packageManager}
+${project.routing && project.routing !== "none" ? `- **Routing:** ${project.routing}` : ""}
 
 ## State
 
@@ -45,15 +59,19 @@ When generating code, follow these decisions strictly. Do not introduce unlisted
 - **Library:** ${project.formLibrary}
 - **Validation:** ${project.validation}
 
-## Styling
+## Styling & Icons
 
-- **Primary:** ${project.styling[0] || "none"}
-${project.styling.length > 1 ? `- **Secondary:** ${project.styling.slice(1).join(", ")}` : ""}
+- **Styling:** ${project.styling[0] || "none"}${project.styling.length > 1 ? ` (+ ${project.styling.slice(1).join(", ")})` : ""}
+- **Icons:** ${designSystem.iconLibrary} — use ONLY this icon library, never mix
 
 ## Architecture Rules
 
 - Folder strategy: ${architecture.folderStrategy}
-- File naming: ${architecture.namingConvention}
+- Component file naming: ${architecture.componentNaming} (e.g. ${architecture.componentNaming === "PascalCase" ? "UserProfile.tsx" : "user-profile.tsx"}) — component function is always PascalCase
+- Util / hook / service naming: ${architecture.utilNaming} (e.g. ${architecture.utilNaming === "camelCase" ? "useAuth.ts · authService.ts" : "use-auth.ts · auth-service.ts"})
+${architecture.fileSuffixes ? "- Dot-suffix convention enabled: auth.types.ts, auth.service.ts, auth.utils.ts" : ""}
+- TypeScript type/interface names are always PascalCase (language convention)
+- Custom hooks always start with \`use\` (React rule)
 - Path alias: ${architecture.pathAliases ? `${architecture.aliasRoot}/* → src/*` : "relative imports only"}
 - Barrel files: ${architecture.barrelFiles}
 - Env vars: ${architecture.envStrategy}
@@ -73,8 +91,14 @@ ${project.styling.length > 1 ? `- **Secondary:** ${project.styling.slice(1).join
 
 - Loading: ${uxPatterns.loadingPattern}
 - Empty states: ${uxPatterns.emptyStateStyle}
+- Error state: ${uxPatterns.errorState}
 - Success feedback: ${uxPatterns.successFeedback}
 - Destructive confirmation: ${uxPatterns.confirmationPattern}
+- Pagination: ${uxPatterns.paginationStyle}
+- Filtering: ${uxPatterns.filteringPattern}
+- Mobile nav: ${uxPatterns.mobileNavigation}
+${uxPatterns.searchDebounce ? "- Search inputs MUST be debounced (300ms)" : ""}
+${uxPatterns.breadcrumbs ? "- Show breadcrumbs on pages deeper than 2 levels" : ""}
 
 ## Design Tokens
 
@@ -85,7 +109,13 @@ ${project.styling.length > 1 ? `- **Secondary:** ${project.styling.slice(1).join
 - Spacing base: ${designSystem.spacingBase}px
 - Shadows: ${designSystem.shadowDepth}
 
----
+${sharedComponents.planned.length > 0 ? `## Shared Components
+
+These components exist in the shared library — DO NOT reimplement them inline:
+
+${sharedComponents.planned.map((c) => `- ${c}`).join("\n")}
+
+` : ""}---
 
 ## Do NOT Use
 
@@ -95,14 +125,21 @@ ${doNotUse.length > 0 ? doNotUse.map((d) => `- ${d}`).join("\n") : "- (no explic
 
 ---
 
-## Code Generation Rules
+${agreements.length > 0 ? `## Team Agreements (ALWAYS enforce)
 
-1. Always match the naming convention: **${architecture.namingConvention}** for components
+${agreements.map((a) => `- ${a}`).join("\n")}
+
+---
+
+` : ""}## Code Generation Rules
+
+1. Component files use **${architecture.componentNaming}** naming (e.g. ${architecture.componentNaming === "PascalCase" ? "UserProfile.tsx" : "user-profile.tsx"}); component functions are always PascalCase
 2. Import paths must use ${architecture.pathAliases ? `the \`${architecture.aliasRoot}\` alias` : "relative imports"}
 3. Validate all user input with **${project.validation !== "none" ? project.validation : "manual validation"}**
 4. All API errors should be handled with **${standards.errorHandling}** pattern
 5. Loading states use **${uxPatterns.loadingPattern}** pattern
 6. ${standards.gitStrategy === "conventional-commits" ? "Commit messages must follow Conventional Commits format (feat:, fix:, chore:)" : "No enforced commit format"}
+7. Icons MUST come from **${designSystem.iconLibrary}** only
 
 *This file was generated by Frontend Decision Engine. Paste it into your AI assistant's context window at the start of every coding session.*
 `;

@@ -24,11 +24,44 @@ const stylingLabel: Record<string, string> = {
   emotion: "Emotion",
 };
 
+const iconLabel: Record<string, string> = {
+  lucide: "Lucide React",
+  heroicons: "Heroicons",
+  tabler: "Tabler Icons",
+  phosphor: "Phosphor Icons",
+  material: "Material Symbols",
+  iconify: "Iconify (@iconify/react)",
+  none: "None (custom SVGs)",
+};
+
+const routingLabel: Record<string, string> = {
+  "react-router": "React Router v7",
+  "tanstack-router": "TanStack Router",
+  none: "None (single view)",
+};
+
 export function generateGuidelines(state: WizardState): string {
-  const { project, architecture, standards, uxPatterns } = state;
+  const { project, architecture, standards, uxPatterns, designSystem, teamAgreements, sharedComponents } = state;
   const generatedAt = new Date().toLocaleDateString("en-US", {
     year: "numeric", month: "long", day: "numeric",
   });
+
+  const agreementsList: string[] = [];
+  if (teamAgreements.noAny) agreementsList.push("No TypeScript `any` — use `unknown` or explicit types");
+  if (teamAgreements.preferInterfaces) agreementsList.push("Prefer `interface` over `type` for object shapes");
+  if (teamAgreements.namedExports) agreementsList.push("Named exports only — no default exports");
+  if (teamAgreements.hooksNaming) agreementsList.push("All custom hooks must begin with `use`");
+  if (teamAgreements.componentOrganization) agreementsList.push("File structure: types → component → export");
+  if (teamAgreements.importOrdering) agreementsList.push("Import order: node → external → internal alias → relative");
+  if (teamAgreements.maxFileLines) agreementsList.push(`Maximum ${teamAgreements.maxFileLines} lines per file`);
+
+  const aiToolFileMap: Record<string, string> = {
+    "claude-code": ".claude/CLAUDE.md",
+    cursor: ".cursor/rules/project.mdc",
+    copilot: ".github/copilot-instructions.md",
+    windsurf: ".windsurfrules",
+    cline: ".clinerules",
+  };
 
   return `# Project Guidelines
 
@@ -43,6 +76,7 @@ export function generateGuidelines(state: WizardState): string {
 - **Framework:** ${frameworkLabel[project.framework] || "Not specified"}
 - **Language:** ${project.language === "typescript" ? "TypeScript (strict mode)" : "JavaScript"}
 - **Package Manager:** ${project.packageManager}
+${project.routing && project.routing !== "none" ? `- **Routing:** ${routingLabel[project.routing] || project.routing}` : ""}
 
 ---
 
@@ -78,6 +112,11 @@ ${project.styling.length > 0
   ? project.styling.map((s) => `- ${stylingLabel[s] || s}`).join("\n")
   : "- No styling library configured"}
 
+### Icons
+
+- ${iconLabel[designSystem.iconLibrary] || designSystem.iconLibrary}
+- **Rule:** Do not mix icon libraries. All icons must come from this source.
+
 ---
 
 ## Architecture
@@ -85,7 +124,9 @@ ${project.styling.length > 0
 ### Folder Structure
 
 - **Strategy:** ${architecture.folderStrategy === "feature-based" ? "Feature-based (group by domain)" : architecture.folderStrategy === "layer-based" ? "Layer-based (group by type)" : "Simple / flat"}
-- **File naming:** ${architecture.namingConvention}
+- **Component files (.tsx):** ${architecture.componentNaming} (e.g. ${architecture.componentNaming === "PascalCase" ? "`UserProfile.tsx`" : "`user-profile.tsx`"})
+- **Utility / hook / service files (.ts):** ${architecture.utilNaming} (e.g. ${architecture.utilNaming === "camelCase" ? "`useAuth.ts`, `authService.ts`" : "`use-auth.ts`, `auth-service.ts`"})${architecture.fileSuffixes ? "\n- **Dot-suffix convention:** Enabled — `auth.types.ts`, `auth.service.ts`, `auth.utils.ts`, `useAuth.hook.ts`" : ""}
+- **Always enforced:** Component functions → PascalCase · TS types/interfaces → PascalCase · Hooks → \`use\` prefix
 - **Path aliases:** ${architecture.pathAliases ? `Enabled — import from \`${architecture.aliasRoot}/*\`` : "Disabled — use relative imports"}
 - **Barrel files:** ${architecture.barrelFiles === "always" ? "Used everywhere (index.ts in all folders)" : architecture.barrelFiles === "feature-level-only" ? "Feature boundaries only" : "Never — use direct imports"}
 
@@ -107,8 +148,8 @@ ${architecture.envStrategy === "schema-validated"
 
 ### Testing
 
-- **Unit tests:** ${standards.testingUnit === "none" ? "None" : `${standards.testingUnit.charAt(0).toUpperCase() + standards.testingUnit.slice(1)}`}
-- **E2E tests:** ${standards.testingE2E === "none" ? "None" : `${standards.testingE2E.charAt(0).toUpperCase() + standards.testingE2E.slice(1)}`}
+- **Unit tests:** ${standards.testingUnit === "none" ? "None" : standards.testingUnit}
+- **E2E tests:** ${standards.testingE2E === "none" ? "None" : standards.testingE2E}
 
 ### Code Quality
 
@@ -123,6 +164,10 @@ ${standards.authApproach === "none" ? "No authentication required." : standards.
 
 ${standards.dateLibrary === "native" ? "Native Date API." : standards.dateLibrary === "dayjs" ? "dayjs — Moment-compatible, 2KB." : "date-fns — functional, fully tree-shakeable."}
 
+${standards.aiCodingTool !== "none" ? `### AI Coding Tool
+
+Using **${standards.aiCodingTool}** — project instructions are in \`${aiToolFileMap[standards.aiCodingTool] || ""}\`.` : ""}
+
 ---
 
 ## UX Patterns
@@ -131,8 +176,32 @@ ${standards.dateLibrary === "native" ? "Native Date API." : standards.dateLibrar
 |---|---|
 | Loading states | ${uxPatterns.loadingPattern === "skeleton" ? "Skeleton placeholders" : uxPatterns.loadingPattern === "spinner" ? "Spinner indicator" : "NProgress-style progress bar"} |
 | Empty states | ${uxPatterns.emptyStateStyle === "illustration" ? "SVG illustrations" : uxPatterns.emptyStateStyle === "icon-text" ? "Icon + descriptive text" : "Text only"} |
+| Error states | ${uxPatterns.errorState} |
 | Success feedback | ${uxPatterns.successFeedback === "toast" ? "Toast notifications" : uxPatterns.successFeedback === "snackbar" ? "Snackbar with action" : "Redirect to success page"} |
 | Destructive actions | ${uxPatterns.confirmationPattern === "modal" ? "Modal confirmation dialog" : uxPatterns.confirmationPattern === "inline" ? "Inline confirm/cancel" : "No confirmation (immediate)"} |
+| Pagination | ${uxPatterns.paginationStyle} |
+| Filtering | ${uxPatterns.filteringPattern} |
+| Mobile navigation | ${uxPatterns.mobileNavigation} |
+| Modal vs drawer | ${uxPatterns.modalVsDrawer} |
+| File upload | ${uxPatterns.fileUpload} |
+| Search | ${uxPatterns.searchDebounce ? "Debounce all search inputs (300ms)" : "No enforced debounce"} |
+| Breadcrumbs | ${uxPatterns.breadcrumbs ? "Show on pages deeper than 2 levels" : "Not used"} |
+
+${sharedComponents.planned.length > 0 ? `---
+
+## Shared Component Library
+
+The following components should be built as shared, reusable primitives before implementing features:
+
+${sharedComponents.planned.map((c) => `- [ ] ${c}`).join("\n")}
+
+Do not re-implement these inline in feature code. Import from the shared library.` : ""}
+
+${agreementsList.length > 0 ? `---
+
+## Team Agreements
+
+${agreementsList.map((a) => `- ${a}`).join("\n")}` : ""}
 
 ---
 

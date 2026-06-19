@@ -5,6 +5,7 @@ export interface RadioOption {
   label: string;
   description?: string;
   icon?: React.ReactNode;
+  recommended?: boolean;
 }
 
 interface RadioGroupProps {
@@ -54,13 +55,20 @@ export function RadioGroup({
                 {opt.icon}
               </span>
             )}
-            <span
-              className={cn(
-                "text-sm font-medium",
-                selected ? "text-indigo-800 dark:text-indigo-300" : "text-zinc-800 dark:text-zinc-200"
+            <span className="flex items-center gap-1.5 flex-wrap">
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  selected ? "text-indigo-800 dark:text-indigo-300" : "text-zinc-800 dark:text-zinc-200"
+                )}
+              >
+                {opt.label}
+              </span>
+              {opt.recommended && (
+                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 leading-none">
+                  Recommended
+                </span>
               )}
-            >
-              {opt.label}
             </span>
             {opt.description && (
               <span className="text-xs text-zinc-500 leading-tight dark:text-zinc-400">

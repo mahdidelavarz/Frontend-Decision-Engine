@@ -4,6 +4,9 @@ import type {
   DesignSystemData,
   StandardsData,
   UXPatternsData,
+  TeamAgreementsData,
+  SharedComponentsData,
+  ProjectDnaData,
   StepCompletion,
 } from "@/types";
 
@@ -11,6 +14,7 @@ export const defaultProject: ProjectData = {
   projectName: "",
   framework: "",
   language: "typescript",
+  routing: "",
   stateManagement: [],
   serverState: "none",
   apiClient: "fetch",
@@ -23,7 +27,9 @@ export const defaultProject: ProjectData = {
 
 export const defaultArchitecture: ArchitectureData = {
   folderStrategy: "feature-based",
-  namingConvention: "PascalCase",
+  componentNaming: "PascalCase",
+  utilNaming: "camelCase",
+  fileSuffixes: false,
   pathAliases: true,
   aliasRoot: "@",
   envStrategy: "dotenv-only",
@@ -37,6 +43,7 @@ export const defaultDesignSystem: DesignSystemData = {
   radiusScale: "md",
   spacingBase: 4,
   shadowDepth: "subtle",
+  iconLibrary: "lucide",
 };
 
 export const defaultStandards: StandardsData = {
@@ -49,6 +56,7 @@ export const defaultStandards: StandardsData = {
   gitStrategy: "conventional-commits",
   authApproach: "none",
   dateLibrary: "native",
+  aiCodingTool: "none",
 };
 
 export const defaultUXPatterns: UXPatternsData = {
@@ -56,6 +64,36 @@ export const defaultUXPatterns: UXPatternsData = {
   emptyStateStyle: "icon-text",
   successFeedback: "toast",
   confirmationPattern: "modal",
+  errorState: "toast",
+  searchDebounce: true,
+  paginationStyle: "offset",
+  modalVsDrawer: "modal",
+  fileUpload: "native",
+  breadcrumbs: false,
+  filteringPattern: "toolbar",
+  mobileNavigation: "hamburger",
+};
+
+export const defaultTeamAgreements: TeamAgreementsData = {
+  noAny: false,
+  preferInterfaces: false,
+  namedExports: false,
+  hooksNaming: false,
+  componentOrganization: false,
+  importOrdering: false,
+  maxFileLines: null,
+};
+
+export const defaultSharedComponents: SharedComponentsData = {
+  planned: [],
+};
+
+export const defaultProjectDna: ProjectDnaData = {
+  teamSize: "small",
+  seoImportance: "none",
+  projectScale: "production",
+  complexity: "moderate",
+  longevity: "long",
 };
 
 export const defaultCompletedSteps: StepCompletion = {};

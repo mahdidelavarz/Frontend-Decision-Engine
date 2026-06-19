@@ -1,7 +1,7 @@
 import type { WizardState } from "@/types";
 
 export function generateReadme(state: WizardState): string {
-  const { project, architecture, standards } = state;
+  const { project, architecture, standards, designSystem } = state;
   const name = project.projectName || "project";
 
   const installCmd: Record<string, string> = {
@@ -39,8 +39,9 @@ export function generateReadme(state: WizardState): string {
 |---|---|
 | Framework | ${project.framework || "Not specified"} |
 | Language | ${project.language} |
-| State | ${project.stateManagement.join(", ") || "none"} |
+${project.routing && project.routing !== "none" ? `| Routing | ${project.routing} |\n` : ""}| State | ${project.stateManagement.join(", ") || "none"} |
 | Styling | ${project.styling.join(", ") || "none"} |
+| Icons | ${state.designSystem.iconLibrary} |
 | Forms | ${project.formLibrary} |
 | Validation | ${project.validation} |
 | Package manager | ${project.packageManager} |

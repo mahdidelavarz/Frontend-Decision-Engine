@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useWizardStore } from "@/store";
 import { StepHeader } from "@/components/wizard/StepHeader";
+import { FilePreviewModal } from "@/components/wizard/FilePreviewModal";
 import { generateGuidelines } from "@/export/generators/guidelines";
 import { generateAIContext } from "@/export/generators/aiContext";
 import { generateWhy } from "@/export/generators/why";
@@ -18,6 +20,7 @@ import {
   Code2,
   GitBranch,
   Check,
+  Eye,
 } from "lucide-react";
 
 const FILE_META = [
@@ -26,48 +29,56 @@ const FILE_META = [
     description: "Human-readable architecture decisions for the team",
     icon: FileText,
     color: "text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/50",
+    previewable: true,
   },
   {
     filename: "AI_CONTEXT.md",
     description: "Paste into AI assistants at the start of every coding session",
     icon: Bot,
     color: "text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/50",
+    previewable: true,
   },
   {
     filename: "WHY.md",
     description: "Rationale behind each decision for future reference",
     icon: HelpCircle,
     color: "text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/50",
+    previewable: true,
   },
   {
     filename: "README.md",
     description: "Project overview with stack summary and getting-started guide",
     icon: BookOpen,
     color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/50",
+    previewable: false,
   },
   {
     filename: "project-config.json",
     description: "Machine-readable config for tooling and future import",
     icon: Settings2,
     color: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-800",
+    previewable: false,
   },
   {
     filename: "tokens.css",
     description: "CSS custom properties — drop into your project's globals.css",
     icon: Palette,
     color: "text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/50",
+    previewable: false,
   },
   {
     filename: "tokens.tailwind.json",
     description: "Tailwind 4 @theme variables — paste into your CSS or import directly",
     icon: Code2,
     color: "text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-950/50",
+    previewable: false,
   },
   {
     filename: ".gitignore",
     description: "Pre-configured for your framework and package manager",
     icon: GitBranch,
     color: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-800",
+    previewable: false,
   },
 ];
 
@@ -77,22 +88,27 @@ function countLines(s: string): number {
 
 export function ExportStep() {
   const state = useWizardStore();
+  const [previewFile, setPreviewFile] = useState<{ filename: string; content: string } | null>(null);
 
-  const previews: Record<string, string> = {
-    "PROJECT_GUIDELINES.md": generateGuidelines(state).slice(0, 400) + "…",
-    "AI_CONTEXT.md": generateAIContext(state).slice(0, 400) + "…",
-    "WHY.md": generateWhy(state).slice(0, 400) + "…",
-    "README.md": generateReadme(state).slice(0, 400) + "…",
-    "tokens.css": generateTokensCss(state).slice(0, 400) + "…",
-    ".gitignore": generateGitignore(state).slice(0, 400) + "…",
+  const fullContent: Record<string, string> = {
+    "PROJECT_GUIDELINES.md": generateGuidelines(state),
+    "AI_CONTEXT.md": generateAIContext(state),
+    "WHY.md": generateWhy(state),
+    "README.md": generateReadme(state),
+    "tokens.css": generateTokensCss(state),
+    ".gitignore": generateGitignore(state),
   };
+
+  const previews: Record<string, string> = Object.fromEntries(
+    Object.entries(fullContent).map(([k, v]) => [k, v.slice(0, 400) + "…"])
+  );
 
   return (
     <div>
       <StepHeader
         stepNumber={7}
         title="Export Blueprint"
-        description="Your architecture decisions are ready. Download the ZIP to get all 8 files."
+        description="Your architecture decisions are ready. Download the ZIP to get all files."
       />
 
       <div className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 mb-6 flex items-center gap-3 dark:border-indigo-800 dark:bg-indigo-950/40">
@@ -105,7 +121,7 @@ export function ExportStep() {
       </div>
 
       <div className="space-y-2">
-        {FILE_META.map(({ filename, description, icon: Icon, color }) => (
+        {FILE_META.map(({ filename, description, icon: Icon, color, previewable }) => (
           <div
             key={filename}
             className="rounded-xl border border-zinc-100 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900"
@@ -119,11 +135,25 @@ export function ExportStep() {
                   <p className="text-sm font-semibold text-zinc-900 font-mono dark:text-zinc-100">
                     {filename}
                   </p>
-                  {previews[filename] && (
-                    <span className="text-xs text-zinc-400">
-                      ~{countLines(previews[filename] || "")} lines
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2 shrink-0">
+                    {fullContent[filename] && (
+                      <span className="text-xs text-zinc-400">
+                        ~{countLines(fullContent[filename])} lines
+                      </span>
+                    )}
+                    {previewable && fullContent[filename] && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPreviewFile({ filename, content: fullContent[filename] })
+                        }
+                        className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-200 font-medium transition-colors"
+                      >
+                        <Eye size={12} />
+                        Preview
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <p className="text-xs text-zinc-500 mt-0.5">{description}</p>
                 {previews[filename] && (
@@ -136,6 +166,14 @@ export function ExportStep() {
           </div>
         ))}
       </div>
+
+      {previewFile && (
+        <FilePreviewModal
+          filename={previewFile.filename}
+          content={previewFile.content}
+          onClose={() => setPreviewFile(null)}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import type { Rule } from "@/types";
 
 export const rules: Rule[] = [
+  // ─── Errors ──────────────────────────────────────────────────────────────
+
   {
     id: "dual-state-managers",
     severity: "error",
@@ -32,19 +34,9 @@ export const rules: Rule[] = [
     affectedSteps: ["project"],
     check: ({ project }) => project.styling.length >= 3,
   },
-  {
-    id: "zod-with-yup",
-    severity: "error",
-    title: "Duplicate validation libraries",
-    message:
-      "Zod and Yup both handle schema validation — there is no reason to use both. Zod is recommended for TypeScript projects (type inference is first-class).",
-    affectedSteps: ["project"],
-    check: ({ project }) =>
-      project.validation === "zod" || project.validation === "yup"
-        ? false
-        : false, // placeholder — actual: both selected not possible via current UI (single select)
-    // This rule activates if somehow both are set (e.g. via JSON import)
-  },
+
+  // ─── Warnings ─────────────────────────────────────────────────────────────
+
   {
     id: "formik-deprecated",
     severity: "warning",
@@ -94,6 +86,29 @@ export const rules: Rule[] = [
     affectedSteps: ["standards"],
     check: ({ standards }) => standards.linting.length === 0,
   },
+  {
+    id: "trpc-with-swr",
+    severity: "warning",
+    title: "tRPC includes its own React Query adapter",
+    message:
+      "tRPC ships a first-party @trpc/react-query adapter. Adding SWR on top creates a redundant caching layer. Use tRPC's built-in React Query integration and remove SWR.",
+    affectedSteps: ["project"],
+    check: ({ project }) =>
+      project.apiStyle === "trpc" && project.serverState === "swr",
+  },
+  {
+    id: "enterprise-no-linting",
+    severity: "warning",
+    title: "Enterprise project with no linting",
+    message:
+      "Enterprise-scale projects without enforced linting accumulate style drift and subtle bugs across contributors. Add at minimum ESLint + Prettier to establish a baseline.",
+    affectedSteps: ["standards"],
+    check: ({ standards, projectDna }) =>
+      projectDna.projectScale === "enterprise" && standards.linting.length === 0,
+  },
+
+  // ─── Info ─────────────────────────────────────────────────────────────────
+
   {
     id: "e2e-no-unit",
     severity: "info",
@@ -147,13 +162,113 @@ export const rules: Rule[] = [
     check: ({ standards }) => standards.authApproach === "jwt",
   },
   {
-    id: "trpc-with-swr",
-    severity: "warning",
-    title: "tRPC includes its own React Query adapter",
+    id: "mvp-e2e-overhead",
+    severity: "info",
+    title: "E2E testing may be premature for an MVP",
     message:
-      "tRPC ships a first-party @trpc/react-query adapter. Adding SWR on top creates a redundant caching layer. Use tRPC's built-in React Query integration and remove SWR.",
+      "E2E tests are valuable long-term but have high setup and maintenance cost. For MVPs, unit tests give faster feedback. Consider adding E2E once core flows stabilize.",
+    affectedSteps: ["standards"],
+    check: ({ standards, projectDna }) =>
+      projectDna.projectScale === "mvp" && standards.testingE2E !== "none",
+  },
+  {
+    id: "icon-library-none",
+    severity: "info",
+    title: "No icon library selected",
+    message:
+      "Most UIs need icons for actions, states, and navigation. Lucide React is lightweight, tree-shakeable, and pairs well with Tailwind. Consider adding one before you need dozens of custom SVGs.",
+    affectedSteps: ["design-system"],
+    check: ({ designSystem }) => designSystem.iconLibrary === "none",
+  },
+
+  // ─── Recommendations ──────────────────────────────────────────────────────
+
+  {
+    id: "routing-unset-vite",
+    severity: "recommendation",
+    title: "Routing library not selected",
+    message:
+      "You're using Vite + React without a routing library. For multi-page apps, React Router v7 or TanStack Router are the standard choices. If this is a single-view app, select 'None' to make it explicit.",
     affectedSteps: ["project"],
     check: ({ project }) =>
-      project.apiStyle === "trpc" && project.serverState === "swr",
+      project.framework === "vite-react" && project.routing === "",
+  },
+  {
+    id: "tanstack-router-modern",
+    severity: "recommendation",
+    title: "Consider TanStack Router for type-safe routing",
+    message:
+      "TanStack Router offers fully type-safe routes, built-in search param validation, and a modern file-based routing option. If your app has complex routing or many query params, it's worth the switch from React Router.",
+    affectedSteps: ["project"],
+    check: ({ project }) =>
+      project.framework === "vite-react" && project.routing === "react-router",
+  },
+  {
+    id: "vitest-not-configured",
+    severity: "recommendation",
+    title: "Add Vitest for fast unit testing",
+    message:
+      "You have no unit tests configured. Vitest is the fastest option for Vite and Next.js projects — it reuses your existing Vite config, runs in milliseconds, and has first-class TypeScript support.",
+    affectedSteps: ["standards"],
+    check: ({ standards, project }) =>
+      standards.testingUnit === "none" &&
+      (project.framework === "vite-react" || project.framework === "next"),
+  },
+  {
+    id: "solo-redux-complexity",
+    severity: "recommendation",
+    title: "Redux Toolkit adds overhead for solo projects",
+    message:
+      "Redux Toolkit works well for large teams with shared state across many features. For a solo project, Zustand gives you the same result with far less boilerplate and no reducer/action ceremony.",
+    affectedSteps: ["project"],
+    check: ({ project, projectDna }) =>
+      projectDna.teamSize === "solo" &&
+      project.stateManagement.includes("redux-toolkit"),
+  },
+  {
+    id: "iconify-bundle-note",
+    severity: "recommendation",
+    title: "Iconify: ensure tree-shaking is configured",
+    message:
+      "Iconify's universal adapter provides access to 200,000+ icons but can bloat your bundle if icons aren't imported individually (e.g. via @iconify/react). Make sure your bundler tree-shakes unused icons.",
+    affectedSteps: ["design-system"],
+    check: ({ designSystem }) => designSystem.iconLibrary === "iconify",
+  },
+
+  // ─── Excellent Matches ────────────────────────────────────────────────────
+
+  {
+    id: "zustand-next-excellent",
+    severity: "excellent-match",
+    title: "Zustand + Next.js is an excellent combination",
+    message:
+      "Zustand works seamlessly with Next.js App Router and React Server Components. It's lightweight, has zero boilerplate, and its localStorage persist middleware pairs perfectly with client components.",
+    affectedSteps: ["project"],
+    check: ({ project }) =>
+      project.framework === "next" &&
+      project.stateManagement.includes("zustand") &&
+      project.stateManagement.filter((s) => s !== "none").length === 1,
+  },
+  {
+    id: "rhf-zod-excellent",
+    severity: "excellent-match",
+    title: "React Hook Form + Zod is the gold standard",
+    message:
+      "This combination gives you performant, uncontrolled form inputs with runtime-validated, TypeScript-inferred schema validation. The @hookform/resolvers package connects them with one line.",
+    affectedSteps: ["project"],
+    check: ({ project }) =>
+      project.formLibrary === "react-hook-form" &&
+      project.validation === "zod",
+  },
+  {
+    id: "lucide-tailwind-excellent",
+    severity: "excellent-match",
+    title: "Lucide + Tailwind is a perfect pair",
+    message:
+      "Lucide React icons accept className, so you can size and color them with standard Tailwind utilities (e.g. size-4 text-zinc-500). No extra CSS needed — fully consistent with your design system.",
+    affectedSteps: ["design-system"],
+    check: ({ project, designSystem }) =>
+      designSystem.iconLibrary === "lucide" &&
+      project.styling.includes("tailwind"),
   },
 ];

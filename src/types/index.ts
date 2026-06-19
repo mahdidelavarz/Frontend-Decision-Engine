@@ -1,4 +1,4 @@
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 3;
 
 export type WizardStep =
   | "home"
@@ -38,6 +38,7 @@ export interface ProjectData {
   projectName: string;
   framework: "next" | "vite-react" | "remix" | "astro" | "sveltekit" | "";
   language: "typescript" | "javascript";
+  routing: "react-router" | "tanstack-router" | "none" | "";
   stateManagement: Array<
     "zustand" | "redux-toolkit" | "jotai" | "context-only" | "none"
   >;
@@ -54,7 +55,12 @@ export interface ProjectData {
 
 export interface ArchitectureData {
   folderStrategy: "feature-based" | "layer-based" | "simple";
-  namingConvention: "PascalCase" | "kebab-case" | "camelCase";
+  /** File naming for React component files (.tsx) — identifier inside is always PascalCase */
+  componentNaming: "PascalCase" | "kebab-case";
+  /** File naming for utilities, hooks, services, stores (.ts) */
+  utilNaming: "camelCase" | "kebab-case";
+  /** Use dot-suffix convention: auth.types.ts, auth.service.ts, auth.utils.ts */
+  fileSuffixes: boolean;
   pathAliases: boolean;
   aliasRoot: "@" | "~" | "src" | "none";
   envStrategy: "dotenv-only" | "schema-validated";
@@ -68,6 +74,7 @@ export interface DesignSystemData {
   radiusScale: "none" | "sm" | "md" | "lg" | "full";
   spacingBase: 4 | 8 | 12 | 16;
   shadowDepth: "flat" | "subtle" | "elevated";
+  iconLibrary: "lucide" | "heroicons" | "tabler" | "phosphor" | "material" | "iconify" | "none";
 }
 
 export interface StandardsData {
@@ -80,13 +87,58 @@ export interface StandardsData {
   gitStrategy: "conventional-commits" | "none";
   authApproach: "jwt" | "cookie" | "none";
   dateLibrary: "native" | "dayjs" | "date-fns";
+  aiCodingTool: "claude-code" | "cursor" | "copilot" | "windsurf" | "cline" | "none";
 }
 
 export interface UXPatternsData {
+  // Core (always visible)
   loadingPattern: "skeleton" | "spinner" | "progress-bar";
   emptyStateStyle: "illustration" | "icon-text" | "text-only";
   successFeedback: "toast" | "snackbar" | "redirect";
   confirmationPattern: "modal" | "inline" | "none";
+  // Frontend conventions (progressive disclosure)
+  errorState: "inline" | "full-page" | "toast";
+  searchDebounce: boolean;
+  paginationStyle: "offset" | "infinite-scroll" | "cursor";
+  modalVsDrawer: "modal" | "drawer" | "context";
+  fileUpload: "native" | "drag-drop" | "none";
+  breadcrumbs: boolean;
+  filteringPattern: "sidebar" | "toolbar" | "inline";
+  mobileNavigation: "bottom-bar" | "hamburger" | "drawer";
+}
+
+export interface TeamAgreementsData {
+  noAny: boolean;
+  preferInterfaces: boolean;
+  namedExports: boolean;
+  hooksNaming: boolean;
+  componentOrganization: boolean;
+  importOrdering: boolean;
+  maxFileLines: number | null;
+}
+
+export interface SharedComponentsData {
+  planned: Array<
+    | "Button"
+    | "Input"
+    | "Select"
+    | "Modal"
+    | "Table"
+    | "DataTable"
+    | "Toast"
+    | "Tabs"
+    | "Card"
+    | "Avatar"
+    | "Pagination"
+  >;
+}
+
+export interface ProjectDnaData {
+  teamSize: "solo" | "small" | "team";
+  seoImportance: "none" | "moderate" | "critical";
+  projectScale: "mvp" | "production" | "enterprise";
+  complexity: "simple" | "moderate" | "complex";
+  longevity: "short" | "long";
 }
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
@@ -95,7 +147,7 @@ export type { ContrastLevel, DerivedTokens } from "@/tokens/derive";
 
 // ─── Rule Engine ─────────────────────────────────────────────────────────────
 
-export type RuleSeverity = "error" | "warning" | "info";
+export type RuleSeverity = "error" | "warning" | "info" | "recommendation" | "excellent-match";
 
 export interface Violation {
   ruleId: string;
@@ -108,7 +160,11 @@ export interface Violation {
 export type CheckState = {
   project: ProjectData;
   architecture: ArchitectureData;
+  designSystem: DesignSystemData;
   standards: StandardsData;
+  uxPatterns: UXPatternsData;
+  teamAgreements: TeamAgreementsData;
+  projectDna: ProjectDnaData;
 };
 
 export interface Rule {
@@ -141,6 +197,9 @@ export interface WizardState {
   designSystem: DesignSystemData;
   standards: StandardsData;
   uxPatterns: UXPatternsData;
+  teamAgreements: TeamAgreementsData;
+  sharedComponents: SharedComponentsData;
+  projectDna: ProjectDnaData;
 
   // Computed
   violations: Violation[];
@@ -153,5 +212,8 @@ export interface WizardState {
   updateDesignSystem: (data: Partial<DesignSystemData>) => void;
   updateStandards: (data: Partial<StandardsData>) => void;
   updateUXPatterns: (data: Partial<UXPatternsData>) => void;
+  updateTeamAgreements: (data: Partial<TeamAgreementsData>) => void;
+  updateSharedComponents: (data: Partial<SharedComponentsData>) => void;
+  updateProjectDna: (data: Partial<ProjectDnaData>) => void;
   resetSession: () => void;
 }

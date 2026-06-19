@@ -9,5 +9,8 @@ export function generateConfig(state: WizardState): object {
     designSystem: state.designSystem,
     standards: state.standards,
     uxPatterns: state.uxPatterns,
+    teamAgreements: state.teamAgreements,
+    sharedComponents: state.sharedComponents,
+    projectDna: state.projectDna,
   };
 }
