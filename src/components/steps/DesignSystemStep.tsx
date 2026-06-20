@@ -81,7 +81,7 @@ export function DesignSystemStep() {
         onBack={onBack}
       />
 
-      <div className="flex gap-8 items-start">
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
         <div className="flex-1 min-w-0 space-y-10">
           <Section id="accentColor" title="Accent Color" icon={<Droplet size={14} />}>
@@ -193,7 +193,7 @@ export function DesignSystemStep() {
         </div>
 
         {/* ── Live preview panel ── */}
-        <div className="w-110 shrink-0 sticky top-4">
+        <div className="w-full lg:w-110 lg:shrink-0 lg:sticky lg:top-4">
           <DesignPreview designSystem={designSystem} />
         </div>
       </div>

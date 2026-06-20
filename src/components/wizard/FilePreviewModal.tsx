@@ -21,12 +21,12 @@ export function FilePreviewModal({ filename, content, onClose }: FilePreviewModa
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-2xl w-full max-w-4xl max-h-[85vh] flex flex-col border border-zinc-200 dark:border-zinc-700">
+      <div className="bg-white dark:bg-zinc-900 rounded-t-xl sm:rounded-xl shadow-2xl w-full max-w-4xl max-h-[85vh] flex flex-col border border-zinc-200 dark:border-zinc-700">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-200 dark:border-zinc-700 shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 border-b border-zinc-200 dark:border-zinc-700 shrink-0">
           <div className="flex items-center gap-3">
             <span className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 rounded">
               {filename}
@@ -59,7 +59,7 @@ export function FilePreviewModal({ filename, content, onClose }: FilePreviewModa
         </div>
 
         {/* Content */}
-        <div className="overflow-auto flex-1 p-5">
+        <div className="overflow-auto flex-1 p-3 sm:p-5">
           <pre className="font-mono text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap">
             {content}
           </pre>

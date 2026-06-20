@@ -126,7 +126,7 @@ export function AdvisorPanel({ violations, onNavigate }: AdvisorPanelProps) {
         <>
           {/* click-away backdrop */}
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-96 z-50 rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-200/60 overflow-hidden dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950 max-h-[80vh] flex flex-col">
+          <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-96 z-50 rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-200/60 overflow-hidden dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950 max-h-[80vh] flex flex-col">
             <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
               <div>
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Decision Advisor</p>

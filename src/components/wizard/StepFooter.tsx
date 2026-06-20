@@ -32,7 +32,7 @@ export function StepFooter({
   const isPreview = currentStep === "preview";
 
   return (
-    <div className="border-t border-zinc-100 bg-white px-6 py-4 flex items-center justify-between gap-4 dark:border-zinc-800 dark:bg-zinc-950">
+    <div className="border-t border-zinc-100 bg-white px-4 py-3 flex items-center justify-between gap-2 sm:px-6 sm:py-4 sm:gap-4 dark:border-zinc-800 dark:bg-zinc-950">
       <Button
         variant="ghost"
         size="sm"
@@ -44,7 +44,7 @@ export function StepFooter({
         Back
       </Button>
 
-      <div className="flex-1 max-w-48">
+      <div className="flex-1 max-w-20 sm:max-w-48">
         <Progress value={currentIndex + 1} max={total} />
         <p className="text-xs text-zinc-400 text-center mt-1">
           {currentIndex + 1} / {total}

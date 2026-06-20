@@ -17,7 +17,7 @@ export function StepNav({ currentStep, completedSteps, onNavigate }: StepNavProp
   const currentIndex = WIZARD_STEPS.indexOf(currentStep);
 
   return (
-    <nav className="w-52 shrink-0 py-6 px-4 border-r border-zinc-100 bg-zinc-50/60 dark:border-zinc-800 dark:bg-zinc-900/50">
+    <nav className="w-52 shrink-0 py-6 px-4 border-r border-zinc-100 bg-zinc-50/60 dark:border-zinc-800 dark:bg-zinc-900/50 overflow-y-auto h-full">
       <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-4 px-2">
         Blueprint
       </p>

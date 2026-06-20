@@ -140,8 +140,8 @@ export function ExportStep() {
                 <Icon size={16} />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-semibold text-zinc-900 font-mono dark:text-zinc-100">
+                <div className="flex items-center justify-between gap-2 min-w-0">
+                  <p className="text-sm font-semibold text-zinc-900 font-mono dark:text-zinc-100 truncate min-w-0">
                     {filename}
                   </p>
                   <div className="flex items-center gap-2 shrink-0">

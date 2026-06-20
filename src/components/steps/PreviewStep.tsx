@@ -90,7 +90,7 @@ export function PreviewStep() {
       />
 
       {/* Toolbar */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:mb-6">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
             {project.projectName || "Untitled Project"}
@@ -144,7 +144,7 @@ export function PreviewStep() {
         {/* ── WCAG contrast table ── */}
         <section>
           <SectionTitle palette={p}>Accessibility — WCAG Contrast</SectionTitle>
-          <div className="rounded-xl overflow-hidden" style={{ border: `1px solid ${p.border}` }}>
+          <div className="rounded-xl overflow-x-auto" style={{ border: `1px solid ${p.border}` }}>
             <table className="w-full text-xs">
               <thead>
                 <tr style={{ background: p.surfaceAlt, color: p.textMuted }}>

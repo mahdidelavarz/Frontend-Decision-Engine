@@ -12,7 +12,7 @@ interface StepHeaderProps {
 
 export function StepHeader({ stepNumber, title, description, onBack, className }: StepHeaderProps) {
   return (
-    <div className={cn("mb-8 border-b border-zinc-100 pb-6 dark:border-zinc-800", className)}>
+    <div className={cn("mb-5 border-b border-zinc-100 pb-4 sm:mb-8 sm:pb-6 dark:border-zinc-800", className)}>
       <div className="flex items-start gap-3">
         {onBack && (
           <button
@@ -28,7 +28,7 @@ export function StepHeader({ stepNumber, title, description, onBack, className }
           <span className="inline-block text-xs font-semibold uppercase tracking-wider text-indigo-600 mb-1 dark:text-indigo-400">
             Step {stepNumber}
           </span>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">{title}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl">{title}</h1>
           <p className="mt-2 text-sm text-zinc-500 max-w-prose dark:text-zinc-400">{description}</p>
         </div>
       </div>

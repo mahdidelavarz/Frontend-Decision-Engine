@@ -154,7 +154,7 @@ export function StandardsStep() {
         onBack={onBack}
       />
 
-      <div className="flex gap-8 items-start">
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
         <div className="flex-1 min-w-0 space-y-10">
           <Section id="errorHandling" title="Error Handling Strategy" icon={<TriangleAlert size={14} />}>
@@ -185,7 +185,7 @@ export function StandardsStep() {
           </Section>
 
           <Section id="linting" title="Code Quality Tools" icon={<Wrench size={14} />}>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {lintingChoices.map((item) => (
                 <Checkbox
                   key={item.value}
@@ -352,7 +352,7 @@ export function StandardsStep() {
         </div>
 
         {/* ── Quality summary panel ── */}
-        <div className="w-110 shrink-0 sticky top-4">
+        <div className="w-full lg:w-110 lg:shrink-0 lg:sticky lg:top-4">
           <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
             Quality Summary
           </p>

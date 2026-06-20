@@ -153,7 +153,7 @@ export function ArchitectureStep() {
         onBack={onBack}
       />
 
-      <div className="flex gap-8 items-start">
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
         <div className="flex-1 min-w-0 space-y-10">
           <Section id="folderStrategy" title="Folder Strategy" icon={<FolderTreeIcon size={14} />}>
@@ -265,7 +265,7 @@ export function ArchitectureStep() {
         </div>
 
         {/* ── Live folder tree ── */}
-        <div className="w-110 shrink-0 sticky top-4">
+        <div className="w-full lg:w-110 lg:shrink-0 lg:sticky lg:top-4">
           <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
             Folder Structure
           </p>

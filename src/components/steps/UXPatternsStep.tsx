@@ -111,7 +111,7 @@ export function UXPatternsStep() {
         onBack={onBack}
       />
 
-      <div className="flex gap-8 items-start">
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
         <div className="flex-1 min-w-0 space-y-10">
 
@@ -121,7 +121,7 @@ export function UXPatternsStep() {
             description="Which UI components will you build into a shared library?"
             icon={<Component size={16} />}
           >
-            <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className="grid grid-cols-2 gap-2 mt-4 sm:grid-cols-3">
               {SHARED_COMPONENTS.map((name) => (
                 <Checkbox
                   key={name}
@@ -292,7 +292,7 @@ export function UXPatternsStep() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Checkbox
                   label="Search debounce"
                   description="Debounce all search inputs (300ms default)"
@@ -311,7 +311,7 @@ export function UXPatternsStep() {
         </div>
 
         {/* ── Interaction examples panel ── */}
-        <div className="w-110 shrink-0 sticky top-4">
+        <div className="w-full lg:w-110 lg:shrink-0 lg:sticky lg:top-4">
           <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
             Interaction Examples
           </p>
