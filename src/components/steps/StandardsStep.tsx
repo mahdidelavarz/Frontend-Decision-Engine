@@ -7,6 +7,7 @@ import { RadioGroup } from "@/components/ui/RadioGroup";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Collapsible } from "@/components/ui/Collapsible";
 import { Section } from "@/components/ui/Section";
+import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
 import { QualitySummary } from "@/components/steps/previews/QualitySummary";
 import {
@@ -19,6 +20,12 @@ import {
   Settings2,
   Target,
   Users,
+  Lock,
+  RefreshCw,
+  ScrollText,
+  CalendarClock,
+  Accessibility,
+  Globe,
 } from "lucide-react";
 import type { StandardsData, TeamAgreementsData } from "@/types";
 
@@ -81,36 +88,12 @@ const lintingChoices: { value: StandardsData["linting"][number]; label: string; 
 ];
 
 const aiToolOptions = [
-  {
-    value: "claude-code",
-    label: "Claude Code",
-    description: "Generates .claude/CLAUDE.md",
-  },
-  {
-    value: "cursor",
-    label: "Cursor",
-    description: "Generates .cursor/rules/project.mdc",
-  },
-  {
-    value: "copilot",
-    label: "GitHub Copilot",
-    description: "Generates .github/copilot-instructions.md",
-  },
-  {
-    value: "windsurf",
-    label: "Windsurf",
-    description: "Generates .windsurfrules",
-  },
-  {
-    value: "cline",
-    label: "Cline",
-    description: "Generates .clinerules",
-  },
-  {
-    value: "none",
-    label: "None",
-    description: "Skip AI tool config",
-  },
+  { value: "claude-code", label: "Claude Code", description: "Generates .claude/CLAUDE.md" },
+  { value: "cursor", label: "Cursor", description: "Generates .cursor/rules/project.mdc" },
+  { value: "copilot", label: "GitHub Copilot", description: "Generates .github/copilot-instructions.md" },
+  { value: "windsurf", label: "Windsurf", description: "Generates .windsurfrules" },
+  { value: "cline", label: "Cline", description: "Generates .clinerules" },
+  { value: "none", label: "None", description: "Skip AI tool config" },
 ];
 
 const accessibilityOptions = [
@@ -156,8 +139,13 @@ export function StandardsStep() {
 
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
-        <div className="flex-1 min-w-0 space-y-10">
-          <Section id="errorHandling" title="Error Handling Strategy" icon={<TriangleAlert size={14} />}>
+        <div className="flex-1 min-w-0 space-y-12">
+          <Section
+            id="errorHandling"
+            title="Error Handling Strategy"
+            icon={<TriangleAlert size={18} />}
+            iconColor="text-amber-600 dark:text-amber-400"
+          >
             <RadioGroup
               options={errorOptions}
               value={standards.errorHandling}
@@ -166,7 +154,12 @@ export function StandardsStep() {
             />
           </Section>
 
-          <Section id="testingUnit" title="Unit Testing" icon={<FlaskConical size={14} />}>
+          <Section
+            id="testingUnit"
+            title="Unit Testing"
+            icon={<FlaskConical size={18} />}
+            iconColor="text-violet-600 dark:text-violet-400"
+          >
             <RadioGroup
               options={unitOptions}
               value={standards.testingUnit}
@@ -175,7 +168,12 @@ export function StandardsStep() {
             />
           </Section>
 
-          <Section id="testingE2E" title="End-to-End Testing" icon={<TestTube size={14} />}>
+          <Section
+            id="testingE2E"
+            title="End-to-End Testing"
+            icon={<TestTube size={18} />}
+            iconColor="text-sky-600 dark:text-sky-400"
+          >
             <RadioGroup
               options={e2eOptions}
               value={standards.testingE2E}
@@ -184,7 +182,12 @@ export function StandardsStep() {
             />
           </Section>
 
-          <Section id="linting" title="Code Quality Tools" icon={<Wrench size={14} />}>
+          <Section
+            id="linting"
+            title="Code Quality Tools"
+            icon={<Wrench size={18} />}
+            iconColor="text-emerald-600 dark:text-emerald-400"
+          >
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {lintingChoices.map((item) => (
                 <Checkbox
@@ -198,7 +201,12 @@ export function StandardsStep() {
             </div>
           </Section>
 
-          <Section id="gitStrategy" title="Git Commit Strategy" icon={<GitBranch size={14} />}>
+          <Section
+            id="gitStrategy"
+            title="Git Commit Strategy"
+            icon={<GitBranch size={18} />}
+            iconColor="text-orange-600 dark:text-orange-400"
+          >
             <RadioGroup
               options={gitOptions}
               value={standards.gitStrategy}
@@ -207,12 +215,12 @@ export function StandardsStep() {
             />
           </Section>
 
-          {/* AI Coding Tool */}
           <Section
             id="aiCodingTool"
             title="AI Coding Tool"
             description="We'll generate the config file pre-filled with your architecture decisions."
-            icon={<Bot size={14} />}
+            icon={<Bot size={18} />}
+            iconColor="text-fuchsia-600 dark:text-fuchsia-400"
           >
             <RadioGroup
               options={aiToolOptions}
@@ -223,52 +231,65 @@ export function StandardsStep() {
           </Section>
 
           {/* Advanced: Auth, retry, logging, date */}
-          <Collapsible title="Advanced Options" description="Auth, retry policy, logging, date library" icon={<Settings2 size={16} />}>
-            <div className="space-y-6 mt-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Authentication Approach
-                </label>
+          <Collapsible
+            title="Advanced Options"
+            description="Auth, retry policy, logging, date library"
+            icon={<Settings2 size={20} />}
+            iconColor="text-slate-500 dark:text-slate-400"
+          >
+            <div className="space-y-10 mt-4">
+              <Field
+                icon={<Lock size={18} />}
+                iconColor="text-indigo-600 dark:text-indigo-400"
+                label="Authentication Approach"
+                description="How sessions and credentials are managed"
+              >
                 <RadioGroup
                   options={authOptions}
                   value={standards.authApproach}
                   onChange={(v) => updateStandards({ authApproach: v as StandardsData["authApproach"] })}
                   columns={3}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  API Retry Policy
-                </label>
+              </Field>
+              <Field
+                icon={<RefreshCw size={18} />}
+                iconColor="text-teal-600 dark:text-teal-400"
+                label="API Retry Policy"
+                description="What happens when a network request fails"
+              >
                 <RadioGroup
                   options={retryOptions}
                   value={standards.retryPolicy}
                   onChange={(v) => updateStandards({ retryPolicy: v as StandardsData["retryPolicy"] })}
                   columns={3}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Production Logging / Error Tracking
-                </label>
+              </Field>
+              <Field
+                icon={<ScrollText size={18} />}
+                iconColor="text-blue-600 dark:text-blue-400"
+                label="Production Logging / Error Tracking"
+                description="Where runtime errors get reported in production"
+              >
                 <RadioGroup
                   options={loggingOptions}
                   value={standards.logging}
                   onChange={(v) => updateStandards({ logging: v as StandardsData["logging"] })}
                   columns={3}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Date / Time Library
-                </label>
+              </Field>
+              <Field
+                icon={<CalendarClock size={18} />}
+                iconColor="text-purple-600 dark:text-purple-400"
+                label="Date / Time Library"
+                description="How dates are parsed and formatted"
+              >
                 <RadioGroup
                   options={dateOptions}
                   value={standards.dateLibrary}
                   onChange={(v) => updateStandards({ dateLibrary: v as StandardsData["dateLibrary"] })}
                   columns={3}
                 />
-              </div>
+              </Field>
             </div>
           </Collapsible>
 
@@ -276,13 +297,16 @@ export function StandardsStep() {
           <Collapsible
             title="Quality Targets"
             description="Accessibility compliance level and browser support expectations"
-            icon={<Target size={16} />}
+            icon={<Target size={20} />}
+            iconColor="text-rose-600 dark:text-rose-400"
           >
-            <div className="space-y-6 mt-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Accessibility Target
-                </label>
+            <div className="space-y-10 mt-4">
+              <Field
+                icon={<Accessibility size={18} />}
+                iconColor="text-green-600 dark:text-green-400"
+                label="Accessibility Target"
+                description="WCAG compliance level your app must meet"
+              >
                 <RadioGroup
                   options={accessibilityOptions}
                   value={standards.accessibilityTarget}
@@ -294,11 +318,13 @@ export function StandardsStep() {
                     WCAG AAA requires 7:1 contrast ratio and strict timing/motion controls — typically required for government or public-sector projects.
                   </p>
                 )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Browser Support
-                </label>
+              </Field>
+              <Field
+                icon={<Globe size={18} />}
+                iconColor="text-cyan-600 dark:text-cyan-400"
+                label="Browser Support"
+                description="Range of browsers your app must run on"
+              >
                 <RadioGroup
                   options={browserSupportOptions}
                   value={standards.browserSupport}
@@ -310,7 +336,7 @@ export function StandardsStep() {
                     Legacy support limits use of modern CSS (container queries, :has(), grid subgrid). Verify your styling choices are compatible.
                   </p>
                 )}
-              </div>
+              </Field>
             </div>
           </Collapsible>
 
@@ -318,7 +344,8 @@ export function StandardsStep() {
           <Collapsible
             title="Team Agreements"
             description="Coding standards included in AI_CONTEXT.md as explicit rules"
-            icon={<Users size={16} />}
+            icon={<Users size={20} />}
+            iconColor="text-pink-600 dark:text-pink-400"
           >
             <div className="space-y-3 mt-4">
               {teamAgreementItems.map((item) => (

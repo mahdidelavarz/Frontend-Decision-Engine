@@ -9,6 +9,8 @@ interface CollapsibleProps {
   description?: string;
   defaultOpen?: boolean;
   icon?: React.ReactNode;
+  /** Tailwind text-color classes for the icon. Defaults to zinc. */
+  iconColor?: string;
   children: React.ReactNode;
   className?: string;
 }
@@ -18,6 +20,7 @@ export function Collapsible({
   description,
   defaultOpen = false,
   icon,
+  iconColor,
   children,
   className,
 }: CollapsibleProps) {
@@ -39,7 +42,7 @@ export function Collapsible({
         className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-xl transition-colors"
       >
         {icon && (
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+          <span className={cn("shrink-0", iconColor ?? "text-zinc-500 dark:text-zinc-400")}>
             {icon}
           </span>
         )}

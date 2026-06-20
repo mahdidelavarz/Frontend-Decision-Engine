@@ -48,7 +48,7 @@ export function RadioGroup({
             className={cn(
               "group relative flex flex-col items-start gap-1 rounded-xl border p-3.5 text-left transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-zinc-950",
               selected
-                ? "border-indigo-500 bg-linear-to-b from-indigo-50 to-indigo-100/60 shadow-sm shadow-indigo-100 dark:border-indigo-400 dark:from-indigo-950/70 dark:to-indigo-900/40 dark:shadow-none"
+                ? "border-indigo-500 bg-linear-to-b from-indigo-50 to-indigo-100 shadow-sm shadow-indigo-100 dark:border-indigo-400 dark:from-indigo-950 dark:to-indigo-900 dark:shadow-none"
                 : "border-zinc-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/30 hover:shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-indigo-500/60 dark:hover:bg-indigo-950/20"
             )}
           >
@@ -89,7 +89,7 @@ export function RadioGroup({
                 {opt.label}
               </span>
               {opt.recommended && (
-                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 leading-none">
+                <span className="text-[10px]  px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 leading-none">
                   Recommended
                 </span>
               )}

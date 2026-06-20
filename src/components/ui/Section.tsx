@@ -8,6 +8,8 @@ interface SectionProps {
   title: string;
   description?: string;
   icon?: React.ReactNode;
+  /** Tailwind text-color classes for the icon. Defaults to indigo. */
+  iconColor?: string;
   /** Anchor id — when the advisor's focusField matches, this section scrolls into view and highlights */
   id?: string;
   required?: boolean;
@@ -19,6 +21,7 @@ export function Section({
   title,
   description,
   icon,
+  iconColor,
   id,
   required,
   children,
@@ -53,7 +56,12 @@ export function Section({
     >
       <div className="mb-3 flex items-start gap-2.5">
         {icon && (
-          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+          <span
+            className={cn(
+              "mt-0.5 shrink-0",
+              iconColor ?? "text-indigo-600 dark:text-indigo-400"
+            )}
+          >
             {icon}
           </span>
         )}

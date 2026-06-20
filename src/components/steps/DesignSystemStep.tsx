@@ -7,9 +7,9 @@ import { RadioGroup } from "@/components/ui/RadioGroup";
 import { ColorPicker } from "@/components/ui/ColorPicker";
 import { Section } from "@/components/ui/Section";
 import { Collapsible } from "@/components/ui/Collapsible";
-import { Label } from "@/components/ui/Label";
+import { Field } from "@/components/ui/Field";
 import { DesignPreview } from "@/components/steps/previews/DesignPreview";
-import { Droplet, Contrast, Type, SquareRoundCorner, Ruler, Layers, Shapes } from "lucide-react";
+import { Droplet, Contrast, Type, SquareRoundCorner, Ruler, Layers, Shapes, Library, SunMoon } from "lucide-react";
 import type { DesignSystemData } from "@/types";
 
 export function isDesignSystemComplete(d: DesignSystemData): boolean {
@@ -83,8 +83,8 @@ export function DesignSystemStep() {
 
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
-        <div className="flex-1 min-w-0 space-y-10">
-          <Section id="accentColor" title="Accent Color" icon={<Droplet size={14} />}>
+        <div className="flex-1 min-w-0 space-y-12">
+          <Section id="accentColor" title="Accent Color" icon={<Droplet size={18} />} iconColor="text-rose-600 dark:text-rose-400">
             <ColorPicker
               label=""
               value={designSystem.accentColorHex}
@@ -92,7 +92,7 @@ export function DesignSystemStep() {
             />
           </Section>
 
-          <Section id="neutralPalette" title="Neutral Palette" icon={<Contrast size={14} />}>
+          <Section id="neutralPalette" title="Neutral Palette" icon={<Contrast size={18} />} iconColor="text-zinc-600 dark:text-zinc-400">
             <RadioGroup
               options={neutralOptions}
               value={designSystem.neutralPalette}
@@ -103,7 +103,7 @@ export function DesignSystemStep() {
             />
           </Section>
 
-          <Section id="fontFamily" title="Font Family" icon={<Type size={14} />}>
+          <Section id="fontFamily" title="Font Family" icon={<Type size={18} />} iconColor="text-blue-600 dark:text-blue-400">
             <RadioGroup
               options={fontOptions}
               value={designSystem.fontFamily}
@@ -114,7 +114,7 @@ export function DesignSystemStep() {
             />
           </Section>
 
-          <Section id="radiusScale" title="Border Radius" icon={<SquareRoundCorner size={14} />}>
+          <Section id="radiusScale" title="Border Radius" icon={<SquareRoundCorner size={18} />} iconColor="text-teal-600 dark:text-teal-400">
             <RadioGroup
               options={radiusOptions}
               value={designSystem.radiusScale}
@@ -125,7 +125,7 @@ export function DesignSystemStep() {
             />
           </Section>
 
-          <Section id="spacingBase" title="Spacing Base Unit" icon={<Ruler size={14} />}>
+          <Section id="spacingBase" title="Spacing Base Unit" icon={<Ruler size={18} />} iconColor="text-indigo-600 dark:text-indigo-400">
             <RadioGroup
               options={spacingOptions}
               value={String(designSystem.spacingBase)}
@@ -136,7 +136,7 @@ export function DesignSystemStep() {
             />
           </Section>
 
-          <Section id="shadowDepth" title="Shadow Depth" icon={<Layers size={14} />}>
+          <Section id="shadowDepth" title="Shadow Depth" icon={<Layers size={18} />} iconColor="text-purple-600 dark:text-purple-400">
             <RadioGroup
               options={shadowOptions}
               value={designSystem.shadowDepth}
@@ -151,14 +151,16 @@ export function DesignSystemStep() {
           <Collapsible
             title="Icon Library & Theme"
             description="Pick an icon set and your theme policy — both optional"
-            icon={<Shapes size={16} />}
+            icon={<Shapes size={20} />}
+            iconColor="text-amber-600 dark:text-amber-400"
           >
-            <div className="space-y-6 mt-4">
-              <div>
-                <Label>Icon Library</Label>
-                <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
-                  Pick one and stick to it — mixing icon libraries adds visual inconsistency.
-                </p>
+            <div className="space-y-10 mt-4">
+              <Field
+                icon={<Library size={18} />}
+                iconColor="text-violet-600 dark:text-violet-400"
+                label="Icon Library"
+                description="Pick one and stick to it — mixing libraries adds visual inconsistency"
+              >
                 <RadioGroup
                   options={iconOptions}
                   value={designSystem.iconLibrary}
@@ -172,13 +174,14 @@ export function DesignSystemStep() {
                     Iconify gives you access to 200,000+ icons via <code>@iconify/react</code>. Make sure your bundler tree-shakes unused icons — import individually, not from the root package.
                   </p>
                 )}
-              </div>
+              </Field>
 
-              <div>
-                <Label>Theme Strategy</Label>
-                <p className="text-xs text-zinc-400 mb-2 dark:text-zinc-500">
-                  Project-level decision — not a full dark mode implementation. Documents the intended theme policy.
-                </p>
+              <Field
+                icon={<SunMoon size={18} />}
+                iconColor="text-amber-600 dark:text-amber-400"
+                label="Theme Strategy"
+                description="Project-level decision — documents the intended theme policy, not a full implementation"
+              >
                 <RadioGroup
                   options={themeOptions}
                   value={designSystem.themeStrategy}
@@ -187,7 +190,7 @@ export function DesignSystemStep() {
                   }
                   columns={2}
                 />
-              </div>
+              </Field>
             </div>
           </Collapsible>
         </div>

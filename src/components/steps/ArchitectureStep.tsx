@@ -6,7 +6,8 @@ import { useStepBack } from "@/components/wizard/useStepBack";
 import { RadioGroup } from "@/components/ui/RadioGroup";
 import { Section } from "@/components/ui/Section";
 import { FolderTree } from "@/components/steps/previews/FolderTree";
-import { FolderTree as FolderTreeIcon, FileType2, Link2, KeyRound, Package } from "lucide-react";
+import { FolderTree as FolderTreeIcon, FileType2, Link2, KeyRound, Package, FileCode, FileCode2 } from "lucide-react";
+import { Field } from "@/components/ui/Field";
 import type { ArchitectureData } from "@/types";
 
 export function isArchitectureComplete(a: ArchitectureData): boolean {
@@ -155,8 +156,13 @@ export function ArchitectureStep() {
 
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
-        <div className="flex-1 min-w-0 space-y-10">
-          <Section id="folderStrategy" title="Folder Strategy" icon={<FolderTreeIcon size={14} />}>
+        <div className="flex-1 min-w-0 space-y-12">
+          <Section
+            id="folderStrategy"
+            title="Folder Strategy"
+            icon={<FolderTreeIcon size={18} />}
+            iconColor="text-amber-600 dark:text-amber-400"
+          >
             <RadioGroup
               options={folderOptions}
               value={architecture.folderStrategy}
@@ -168,15 +174,19 @@ export function ArchitectureStep() {
           </Section>
 
           {/* ── Naming conventions ── */}
-          <Section id="naming" title="Naming Conventions" icon={<FileType2 size={14} />}>
+          <Section
+            id="naming"
+            title="Naming Conventions"
+            icon={<FileType2 size={18} />}
+            iconColor="text-violet-600 dark:text-violet-400"
+          >
             <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1 dark:text-zinc-300">
-                Component File Naming
-              </label>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
-                Applies to <code>.tsx</code> files. The component function inside is always PascalCase regardless.
-              </p>
+            <Field
+              icon={<FileCode size={18} />}
+              iconColor="text-violet-600 dark:text-violet-400"
+              label="Component File Naming"
+              description={<>Applies to <code>.tsx</code> files. The component function inside is always PascalCase regardless.</>}
+            >
               <RadioGroup
                 options={componentNamingOptions}
                 value={architecture.componentNaming}
@@ -185,15 +195,14 @@ export function ArchitectureStep() {
                 }
                 columns={2}
               />
-            </div>
+            </Field>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1 dark:text-zinc-300">
-                Utility, Hook &amp; Service File Naming
-              </label>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
-                Applies to <code>.ts</code> files — hooks, services, stores, utilities.
-              </p>
+            <Field
+              icon={<FileCode2 size={18} />}
+              iconColor="text-sky-600 dark:text-sky-400"
+              label="Utility, Hook & Service File Naming"
+              description={<>Applies to <code>.ts</code> files — hooks, services, stores, utilities.</>}
+            >
               <RadioGroup
                 options={utilNamingOptions}
                 value={architecture.utilNaming}
@@ -202,7 +211,7 @@ export function ArchitectureStep() {
                 }
                 columns={2}
               />
-            </div>
+            </Field>
 
             <div className="flex items-start gap-3 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
               <input
@@ -227,7 +236,12 @@ export function ArchitectureStep() {
             </div>
           </Section>
 
-          <Section id="aliasRoot" title="Path Alias" icon={<Link2 size={14} />}>
+          <Section
+            id="aliasRoot"
+            title="Path Alias"
+            icon={<Link2 size={18} />}
+            iconColor="text-sky-600 dark:text-sky-400"
+          >
             <RadioGroup
               options={aliasOptions}
               value={architecture.aliasRoot}
@@ -241,7 +255,12 @@ export function ArchitectureStep() {
             />
           </Section>
 
-          <Section id="envStrategy" title="Environment Variables" icon={<KeyRound size={14} />}>
+          <Section
+            id="envStrategy"
+            title="Environment Variables"
+            icon={<KeyRound size={18} />}
+            iconColor="text-emerald-600 dark:text-emerald-400"
+          >
             <RadioGroup
               options={envOptions}
               value={architecture.envStrategy}
@@ -252,7 +271,7 @@ export function ArchitectureStep() {
             />
           </Section>
 
-          <Section id="barrelFiles" title="Barrel Files (index.ts re-exports)" icon={<Package size={14} />}>
+          <Section id="barrelFiles" title="Barrel Files (index.ts re-exports)" icon={<Package size={18} />} iconColor="text-orange-600 dark:text-orange-400">
             <RadioGroup
               options={barrelOptions}
               value={architecture.barrelFiles}
