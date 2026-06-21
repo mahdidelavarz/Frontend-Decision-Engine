@@ -97,9 +97,9 @@ export function ReadinessChecklist({ state }: Props) {
       : "bg-red-500";
 
   return (
-    <div className="rounded-xl border border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-900 mb-6">
+    <div className="rounded-xl border border-zinc-100 bg-white dark:border-zinc-700 dark:bg-zinc-800 mb-6">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-700">
         <div>
           <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
             Project Readiness Checklist
@@ -115,7 +115,7 @@ export function ReadinessChecklist({ state }: Props) {
       </div>
 
       {/* Progress bar */}
-      <div className="h-1 bg-zinc-100 dark:bg-zinc-800">
+      <div className="h-1 bg-zinc-100 dark:bg-zinc-700">
         <div
           className={`h-full transition-all duration-500 ${barColor}`}
           style={{ width: `${pct}%` }}
@@ -123,7 +123,7 @@ export function ReadinessChecklist({ state }: Props) {
       </div>
 
       {/* Items */}
-      <div className="divide-y divide-zinc-50 dark:divide-zinc-800/60 px-4">
+      <div className="divide-y divide-zinc-50 dark:divide-zinc-700/60 px-4">
         {items.map((item) => (
           <div key={item.label} className="flex items-start gap-3 py-2.5">
             <span

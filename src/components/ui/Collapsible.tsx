@@ -31,15 +31,15 @@ export function Collapsible({
       className={cn(
         "rounded-xl border transition-colors",
         open
-          ? "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
-          : "border-zinc-200 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-900/40",
+          ? "border-zinc-300 dark:border-zinc-500 bg-white dark:bg-zinc-800"
+          : "border-zinc-200 dark:border-zinc-600 bg-zinc-50/60 dark:bg-zinc-800/40",
         className
       )}
     >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-xl transition-colors"
+        className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-zinc-50 dark:hover:bg-zinc-700/50 rounded-xl transition-colors"
       >
         {icon && (
           <span className={cn("shrink-0", iconColor ?? "text-zinc-500 dark:text-zinc-400")}>
@@ -69,7 +69,7 @@ export function Collapsible({
         />
       </button>
       {open && (
-        <div className="px-4 pb-4 pt-1 border-t border-zinc-100 dark:border-zinc-800">
+        <div className="px-4 pb-4 pt-1 border-t border-zinc-100 dark:border-zinc-700">
           {children}
         </div>
       )}

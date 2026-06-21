@@ -54,7 +54,7 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
   };
 
   return (
-    <div className="flex h-screen flex-col bg-white overflow-hidden dark:bg-zinc-950">
+    <div className="flex h-screen flex-col bg-white overflow-hidden dark:bg-zinc-900">
       {/* Mobile nav overlay */}
       {navOpen && (
         <div
@@ -69,16 +69,16 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
       {/* Mobile nav drawer */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 flex flex-col bg-white dark:bg-zinc-950 border-r border-zinc-100 dark:border-zinc-800 transition-transform duration-300 ease-in-out lg:hidden",
+          "fixed inset-y-0 left-0 z-50 w-64 flex flex-col bg-white dark:bg-zinc-900 border-r border-zinc-100 dark:border-zinc-700 transition-transform duration-300 ease-in-out lg:hidden",
           navOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-700 shrink-0">
           <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Blueprint</span>
           <button
             type="button"
             onClick={() => setNavOpen(false)}
-            className="p-1.5 rounded-md text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-200 dark:hover:bg-zinc-800"
+            className="p-1.5 rounded-md text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-200 dark:hover:bg-zinc-700"
             aria-label="Close navigation"
           >
             <X size={16} />
@@ -92,17 +92,17 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
       </div>
 
       {/* Top bar */}
-      <header className="flex items-center justify-between border-b border-zinc-100 px-4 py-3 bg-white z-10 dark:bg-zinc-950 dark:border-zinc-800 sm:px-6">
+      <header className="flex items-center justify-between border-b border-zinc-100 px-4 py-3 bg-white z-10 dark:bg-zinc-900 dark:border-zinc-700 sm:px-6">
         <div className="flex items-center gap-2 min-w-0">
           <button
             type="button"
             onClick={() => setNavOpen(true)}
-            className="lg:hidden flex items-center justify-center w-8 h-8 rounded-md text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 shrink-0"
+            className="lg:hidden flex items-center justify-center w-8 h-8 rounded-md text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 shrink-0"
             aria-label="Open navigation"
           >
             <Menu size={18} />
           </button>
-          <Cpu size={18} className="text-indigo-600 shrink-0" />
+          <Cpu size={33} className="text-indigo-600 shrink-0" />
           <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 truncate">
             FrontForge
           </span>
@@ -127,7 +127,7 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
           />
         </div>
 
-        <main className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 lg:px-8 bg-white dark:bg-zinc-950">
+        <main className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 lg:px-8 bg-white dark:bg-zinc-900">
           <div className="mx-auto max-w-3xl lg:max-w-none">{children}</div>
         </main>
       </div>

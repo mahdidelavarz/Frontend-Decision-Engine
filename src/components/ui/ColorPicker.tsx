@@ -50,7 +50,7 @@ export function ColorPicker({ value, onChange, label, className }: ColorPickerPr
             type="color"
             value={isValidHex(value) ? value : "#3b82f6"}
             onChange={(e) => handleNativeChange(e.target.value)}
-            className="h-9 w-9 rounded-lg border border-zinc-200 cursor-pointer p-0.5 bg-white dark:border-zinc-700 dark:bg-zinc-900"
+            className="h-9 w-9 rounded-lg border border-zinc-200 cursor-pointer p-0.5 bg-white dark:border-zinc-600 dark:bg-zinc-800"
             title="Pick a color"
           />
         </div>
@@ -62,7 +62,7 @@ export function ColorPicker({ value, onChange, label, className }: ColorPickerPr
             if (!isValidHex(inputVal)) setInputVal(value);
           }}
           placeholder="#3b82f6"
-          className="w-28 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-sm font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className="w-28 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-sm font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
         />
       </div>
       <div className="flex flex-wrap gap-1.5">

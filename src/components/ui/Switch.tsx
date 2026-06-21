@@ -33,7 +33,7 @@ export function Switch({ checked, onChange, label, description, disabled }: Swit
           onClick={() => !disabled && onChange(!checked)}
           className={cn(
             "h-5 w-9 rounded-full transition-colors",
-            checked ? "bg-indigo-600" : "bg-zinc-200 dark:bg-zinc-700",
+            checked ? "bg-indigo-600" : "bg-zinc-200 dark:bg-zinc-600",
             disabled && "opacity-50 cursor-not-allowed"
           )}
         />

@@ -59,7 +59,7 @@ const FILE_META = [
     filename: "project-config.json",
     description: "Machine-readable config for tooling and future import",
     icon: Settings2,
-    color: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-800",
+    color: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-700",
     previewable: false,
   },
   {
@@ -80,7 +80,7 @@ const FILE_META = [
     filename: ".gitignore",
     description: "Pre-configured for your framework and package manager",
     icon: GitBranch,
-    color: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-800",
+    color: "text-zinc-600 bg-zinc-100 dark:text-zinc-400 dark:bg-zinc-700",
     previewable: false,
   },
 ];
@@ -133,7 +133,7 @@ export function ExportStep() {
         {FILE_META.map(({ filename, description, icon: Icon, color, previewable }) => (
           <div
             key={filename}
-            className="rounded-xl border border-zinc-100 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900"
+            className="rounded-xl border border-zinc-100 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800"
           >
             <div className="flex items-start gap-3">
               <div className={`rounded-lg p-2 shrink-0 ${color}`}>
@@ -166,7 +166,7 @@ export function ExportStep() {
                 </div>
                 <p className="text-xs text-zinc-500 mt-0.5">{description}</p>
                 {previews[filename] && (
-                  <pre className="mt-2 text-[10px] leading-relaxed text-zinc-500 bg-zinc-50 rounded-lg p-2 overflow-hidden max-h-16 font-mono whitespace-pre-wrap dark:bg-zinc-800 dark:text-zinc-400">
+                  <pre className="mt-2 text-[10px] leading-relaxed text-zinc-500 bg-zinc-50 rounded-lg p-2 overflow-hidden max-h-16 font-mono whitespace-pre-wrap dark:bg-zinc-700 dark:text-zinc-400">
                     {previews[filename].slice(0, 200)}
                   </pre>
                 )}

@@ -13,9 +13,9 @@ const variantClasses: Record<Variant, string> = {
   primary:
     "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-indigo-300",
   secondary:
-    "bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100 disabled:opacity-50 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-700 dark:active:bg-zinc-600",
+    "bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100 disabled:opacity-50 dark:bg-zinc-700 dark:text-zinc-100 dark:border-zinc-600 dark:hover:bg-zinc-600 dark:active:bg-zinc-500",
   ghost:
-    "text-zinc-700 hover:bg-zinc-100 active:bg-zinc-200 disabled:opacity-40 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:active:bg-zinc-700",
+    "text-zinc-700 hover:bg-zinc-100 active:bg-zinc-200 disabled:opacity-40 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:active:bg-zinc-600",
   destructive:
     "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:bg-red-300",
 };

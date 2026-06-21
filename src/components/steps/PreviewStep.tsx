@@ -96,12 +96,12 @@ export function PreviewStep() {
             {project.projectName || "Untitled Project"}
           </span>
           {stackChips.slice(0, 6).map((chip) => (
-            <span key={chip} className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            <span key={chip} className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
               {chip}
             </span>
           ))}
         </div>
-        <div className="inline-flex shrink-0 rounded-lg border border-zinc-200 p-0.5 dark:border-zinc-700">
+        <div className="inline-flex shrink-0 rounded-lg border border-zinc-200 p-0.5 dark:border-zinc-600">
           <button
             type="button"
             onClick={() => setTheme("light")}

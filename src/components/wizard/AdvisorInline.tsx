@@ -48,7 +48,7 @@ export function AdvisorInline() {
         </p>
         <span className="ml-auto text-xs text-zinc-500">Click to fix in place</span>
       </div>
-      <div className="divide-y divide-amber-100/70 bg-white dark:divide-zinc-800 dark:bg-zinc-900">
+      <div className="divide-y divide-amber-100/70 bg-white dark:divide-zinc-700 dark:bg-zinc-800">
         {[...issues, ...tips].map((v) => (
           <ViolationItem key={v.ruleId} v={v} onJump={handleJump} />
         ))}

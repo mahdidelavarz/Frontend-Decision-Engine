@@ -213,7 +213,7 @@ export function ArchitectureStep() {
               />
             </Field>
 
-            <div className="flex items-start gap-3 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
+            <div className="flex items-start gap-3 rounded-lg border border-zinc-200 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800 p-3">
               <input
                 id="file-suffixes"
                 type="checkbox"

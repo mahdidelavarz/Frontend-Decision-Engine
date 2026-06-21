@@ -104,7 +104,7 @@ export function AdvisorPanel({ violations, onNavigate }: AdvisorPanelProps) {
             ? "border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-400 dark:hover:bg-amber-950"
             : hasPositive
             ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 dark:hover:bg-emerald-950"
-            : "border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            : "border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-700/50 dark:text-zinc-400 dark:hover:bg-zinc-700"
         )}
       >
         {issueCount > 0 ? <AlertTriangle size={12} /> : hasPositive ? <Sparkles size={12} /> : <ShieldCheck size={12} />}
@@ -126,8 +126,8 @@ export function AdvisorPanel({ violations, onNavigate }: AdvisorPanelProps) {
         <>
           {/* click-away backdrop */}
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-96 z-50 rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-200/60 overflow-hidden dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950 max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
+          <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-96 z-50 rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-200/60 overflow-hidden dark:border-zinc-600 dark:bg-zinc-800 dark:shadow-zinc-900 max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-700">
               <div>
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Decision Advisor</p>
                 <p className="text-xs text-zinc-500">
@@ -145,7 +145,7 @@ export function AdvisorPanel({ violations, onNavigate }: AdvisorPanelProps) {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-md p-1 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-200 dark:hover:bg-zinc-800"
+                className="rounded-md p-1 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-200 dark:hover:bg-zinc-700"
               >
                 <X size={14} />
               </button>
@@ -206,10 +206,10 @@ function Group({
   if (!show) return null;
   return (
     <div>
-      <div className="px-4 py-1.5 bg-zinc-50 border-y border-zinc-100 dark:bg-zinc-800/50 dark:border-zinc-800">
+      <div className="px-4 py-1.5 bg-zinc-50 border-y border-zinc-100 dark:bg-zinc-700/50 dark:border-zinc-700">
         <p className={cn("text-[10px] font-semibold uppercase tracking-wide", toneClass)}>{label}</p>
       </div>
-      <div className="divide-y divide-zinc-50 dark:divide-zinc-800">{children}</div>
+      <div className="divide-y divide-zinc-50 dark:divide-zinc-700">{children}</div>
     </div>
   );
 }

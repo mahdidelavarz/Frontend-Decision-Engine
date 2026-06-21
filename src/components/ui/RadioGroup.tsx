@@ -46,10 +46,10 @@ export function RadioGroup({
             aria-pressed={selected}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "group relative flex flex-col items-start gap-1 rounded-xl border p-3.5 text-left transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-zinc-950",
+              "group relative flex flex-col items-start gap-1 rounded-xl border p-3.5 text-left transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-zinc-900",
               selected
                 ? "border-indigo-500 bg-indigo-50 shadow-sm shadow-indigo-100 dark:border-indigo-400 dark:bg-indigo-950  dark:shadow-none"
-                : "border-zinc-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/30 hover:shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-indigo-500/60 dark:hover:bg-indigo-950/20"
+                : "border-zinc-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/30 hover:shadow-sm dark:border-zinc-600 dark:bg-zinc-800 dark:hover:border-indigo-500/60 dark:hover:bg-indigo-950/20"
             )}
           >
             {/* Check badge — top-right when selected */}
