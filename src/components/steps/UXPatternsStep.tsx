@@ -63,7 +63,7 @@ const errorStateOptions = [
 ];
 
 const paginationOptions = [
-  { value: "offset", label: "Offset / Pages", description: "Page 1, 2, 3…", recommended: true },
+  { value: "offset", label: "Offset / Pages", description: "Page 1, 2, 3…" },
   { value: "cursor", label: "Cursor-based", description: "Scalable for large datasets" },
   { value: "infinite-scroll", label: "Infinite Scroll", description: "Load more on scroll" },
 ];

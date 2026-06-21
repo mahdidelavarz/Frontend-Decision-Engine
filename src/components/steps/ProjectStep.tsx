@@ -50,7 +50,7 @@ const frameworks = [
 ];
 
 const routingOptions = [
-  { value: "react-router", label: "React Router", description: "Industry standard", recommended: true },
+  { value: "react-router", label: "React Router", description: "Industry standard" },
   { value: "tanstack-router", label: "TanStack Router", description: "Fully type-safe routes" },
   { value: "none", label: "None", description: "Single view, no routing" },
 ];
@@ -468,7 +468,7 @@ export function ProjectStep() {
             >
               <RadioGroup
                 options={[
-                  { value: "fetch", label: "Native Fetch", description: "No dependency", recommended: true },
+                  { value: "fetch", label: "Native Fetch", description: "No dependency" },
                   { value: "axios", label: "Axios", description: "Interceptors, transforms" },
                 ]}
                 value={project.apiClient}

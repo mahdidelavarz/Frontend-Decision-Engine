@@ -76,7 +76,7 @@ const authOptions = [
 
 const dateOptions = [
   { value: "native", label: "Native Date", description: "Zero dependency" },
-  { value: "dayjs", label: "dayjs", description: "Moment-compatible, tiny", recommended: true },
+  { value: "dayjs", label: "dayjs", description: "Moment-compatible, tiny" },
   { value: "date-fns", label: "date-fns", description: "Functional, tree-shakeable" },
 ];
 
