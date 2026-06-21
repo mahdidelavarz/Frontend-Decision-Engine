@@ -2,7 +2,7 @@
 
 ## Product Mission
 
-Frontend Decision Engine is a **decision-making tool**, not a code generator. It helps developers make, validate, visualize, document, and apply frontend architecture decisions before writing business code. Outputs are documentation files, design tokens, and a blueprint installer script — not generated application code.
+FrontForge is a **decision-making tool**, not a code generator. It helps developers make, validate, visualize, document, and apply frontend architecture decisions before writing business code. Outputs are documentation files, design tokens, and a blueprint installer script — not generated application code.
 
 **Product lifecycle:** Think → Validate → Visualize → Document → Apply
 

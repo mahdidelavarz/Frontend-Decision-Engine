@@ -104,7 +104,7 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
           </button>
           <Cpu size={18} className="text-indigo-600 shrink-0" />
           <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 truncate">
-            Frontend Decision Engine
+            FrontForge
           </span>
           {projectName && (
             <span className="hidden sm:inline text-sm text-zinc-400 dark:text-zinc-500 truncate">— {projectName}</span>

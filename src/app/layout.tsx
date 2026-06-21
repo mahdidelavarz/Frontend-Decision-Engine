@@ -25,7 +25,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Frontend Decision Engine",
+  title: "FrontForge",
   description:
     "Make all your frontend architecture decisions before writing a single line of code. Generate documentation, AI context, and design tokens.",
 };

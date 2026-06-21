@@ -1,4 +1,4 @@
-# Frontend Decision Engine — Developer Map
+# FrontForge — Developer Map
 
 A navigation guide to the codebase. Updated after the changes.md implementation (2026-06-18).
 

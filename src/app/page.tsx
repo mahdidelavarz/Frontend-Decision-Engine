@@ -58,7 +58,7 @@ export default function HomePage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-            Frontend Decision Engine
+            FrontForge
           </h1>
           <p className="text-sm text-zinc-500">
             Architecture planning for serious projects

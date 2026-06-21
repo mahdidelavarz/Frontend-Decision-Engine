@@ -183,7 +183,7 @@ export function PreviewStep() {
             <p className="text-3xl font-bold leading-tight" style={{ color: p.text }}>The quick brown fox</p>
             <p className="text-xl font-semibold" style={{ color: p.text }}>Architecture decisions matter</p>
             <p className="text-base leading-relaxed" style={{ color: p.textMuted }}>
-              Frontend Decision Engine helps you choose the right tools before writing a single line of code. Body text at 16px.
+              FrontForge helps you choose the right tools before writing a single line of code. Body text at 16px.
             </p>
             <code className="text-xs font-mono px-2 py-1 rounded" style={{ color: "var(--pv-accent-700)", background: "var(--pv-accent-50)" }}>
               {`const engine = new DecisionEngine({ typed: true })`}
