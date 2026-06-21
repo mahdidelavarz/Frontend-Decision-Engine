@@ -125,7 +125,7 @@ export function PreviewStep() {
 
       <div
         style={{ ...(cssVars as React.CSSProperties), background: p.surface, borderColor: p.border, color: p.text }}
-        className="space-y-10 rounded-2xl border p-6 transition-colors"
+        className="space-y-12 rounded-2xl border p-6 transition-colors"
       >
         {/* ── Accent color palette ── */}
         <section>

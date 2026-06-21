@@ -7,8 +7,25 @@ import { RadioGroup } from "@/components/ui/RadioGroup";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Collapsible } from "@/components/ui/Collapsible";
 import { Section } from "@/components/ui/Section";
+import { Field } from "@/components/ui/Field";
 import { UXExamples } from "@/components/steps/previews/UXExamples";
-import { Loader, Inbox, CircleCheck, CircleAlert, Component, Smartphone, SlidersHorizontal } from "lucide-react";
+import {
+  Loader,
+  Inbox,
+  CircleCheck,
+  CircleAlert,
+  Component,
+  Smartphone,
+  SlidersHorizontal,
+  LayoutTemplate,
+  Maximize2,
+  AlertTriangle,
+  ArrowLeftRight,
+  PanelRight,
+  Upload,
+  Filter,
+  Menu,
+} from "lucide-react";
 import type { UXPatternsData, SharedComponentsData } from "@/types";
 
 export function isUXPatternsComplete(_u: UXPatternsData): boolean {
@@ -113,13 +130,14 @@ export function UXPatternsStep() {
 
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:items-start">
         {/* ── Form controls ── */}
-        <div className="flex-1 min-w-0 space-y-10">
+        <div className="flex-1 min-w-0 space-y-12">
 
           {/* Shared Components */}
           <Collapsible
             title="Planned Shared Components"
             description="Which UI components will you build into a shared library?"
-            icon={<Component size={16} />}
+            icon={<Component size={20} />}
+            iconColor="text-violet-600 dark:text-violet-400"
           >
             <div className="grid grid-cols-2 gap-2 mt-4 sm:grid-cols-3">
               {SHARED_COMPONENTS.map((name) => (
@@ -139,7 +157,12 @@ export function UXPatternsStep() {
           </Collapsible>
 
           {/* Core UX patterns */}
-          <Section id="loadingPattern" title="Loading State Pattern" icon={<Loader size={14} />}>
+          <Section
+            id="loadingPattern"
+            title="Loading State Pattern"
+            icon={<Loader size={18} />}
+            iconColor="text-sky-600 dark:text-sky-400"
+          >
             <RadioGroup
               options={loadingOptions}
               value={uxPatterns.loadingPattern}
@@ -148,7 +171,12 @@ export function UXPatternsStep() {
             />
           </Section>
 
-          <Section id="emptyStateStyle" title="Empty State Style" icon={<Inbox size={14} />}>
+          <Section
+            id="emptyStateStyle"
+            title="Empty State Style"
+            icon={<Inbox size={18} />}
+            iconColor="text-blue-600 dark:text-blue-400"
+          >
             <RadioGroup
               options={emptyOptions}
               value={uxPatterns.emptyStateStyle}
@@ -157,7 +185,12 @@ export function UXPatternsStep() {
             />
           </Section>
 
-          <Section id="successFeedback" title="Success Feedback" icon={<CircleCheck size={14} />}>
+          <Section
+            id="successFeedback"
+            title="Success Feedback"
+            icon={<CircleCheck size={18} />}
+            iconColor="text-emerald-600 dark:text-emerald-400"
+          >
             <RadioGroup
               options={successOptions}
               value={uxPatterns.successFeedback}
@@ -166,7 +199,12 @@ export function UXPatternsStep() {
             />
           </Section>
 
-          <Section id="confirmationPattern" title="Destructive Action Confirmation" icon={<CircleAlert size={14} />}>
+          <Section
+            id="confirmationPattern"
+            title="Destructive Action Confirmation"
+            icon={<CircleAlert size={18} />}
+            iconColor="text-rose-600 dark:text-rose-400"
+          >
             <RadioGroup
               options={confirmOptions}
               value={uxPatterns.confirmationPattern}
@@ -179,13 +217,16 @@ export function UXPatternsStep() {
           <Collapsible
             title="Responsive Design"
             description="Layout philosophy and breakpoint approach"
-            icon={<Smartphone size={16} />}
+            icon={<Smartphone size={20} />}
+            iconColor="text-teal-600 dark:text-teal-400"
           >
-            <div className="space-y-6 mt-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Layout Strategy
-                </label>
+            <div className="space-y-10 mt-4">
+              <Field
+                icon={<LayoutTemplate size={18} />}
+                iconColor="text-indigo-600 dark:text-indigo-400"
+                label="Layout Strategy"
+                description="Whether to design starting from mobile or desktop viewport"
+              >
                 <RadioGroup
                   options={layoutStrategyOptions}
                   value={uxPatterns.layoutStrategy}
@@ -197,18 +238,20 @@ export function UXPatternsStep() {
                     Mobile first aligns with Tailwind&apos;s default responsive utilities (sm:, md:, lg:) — styles apply from small up.
                   </p>
                 )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Breakpoint Strategy
-                </label>
+              </Field>
+              <Field
+                icon={<Maximize2 size={18} />}
+                iconColor="text-sky-600 dark:text-sky-400"
+                label="Breakpoint Strategy"
+                description="Whether to use standard framework breakpoints or define custom ones"
+              >
                 <RadioGroup
                   options={breakpointStrategyOptions}
                   value={uxPatterns.breakpointStrategy}
                   onChange={(v) => updateUXPatterns({ breakpointStrategy: v as UXPatternsData["breakpointStrategy"] })}
                   columns={2}
                 />
-              </div>
+              </Field>
             </div>
           </Collapsible>
 
@@ -216,81 +259,93 @@ export function UXPatternsStep() {
           <Collapsible
             title="Frontend Conventions"
             description="Standardize recurring UI decisions across the whole app"
-            icon={<SlidersHorizontal size={16} />}
+            icon={<SlidersHorizontal size={20} />}
+            iconColor="text-indigo-600 dark:text-indigo-400"
           >
-            {/* errorState anchor for jump-to-field */}
-            <div className="space-y-6 mt-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Error State Display
-                </label>
+            <div className="space-y-10 mt-4">
+              <Field
+                icon={<AlertTriangle size={18} />}
+                iconColor="text-amber-600 dark:text-amber-400"
+                label="Error State Display"
+                description="How errors are shown when a fetch or action fails"
+              >
                 <RadioGroup
                   options={errorStateOptions}
                   value={uxPatterns.errorState}
                   onChange={(v) => updateUXPatterns({ errorState: v as UXPatternsData["errorState"] })}
                   columns={3}
                 />
-              </div>
+              </Field>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Pagination Style
-                </label>
+              <Field
+                icon={<ArrowLeftRight size={18} />}
+                iconColor="text-blue-600 dark:text-blue-400"
+                label="Pagination Style"
+                description="How large lists are split and navigated"
+              >
                 <RadioGroup
                   options={paginationOptions}
                   value={uxPatterns.paginationStyle}
                   onChange={(v) => updateUXPatterns({ paginationStyle: v as UXPatternsData["paginationStyle"] })}
                   columns={3}
                 />
-              </div>
+              </Field>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Modal vs Drawer Preference
-                </label>
+              <Field
+                icon={<PanelRight size={18} />}
+                iconColor="text-violet-600 dark:text-violet-400"
+                label="Modal vs Drawer Preference"
+                description="Default overlay pattern for secondary content and forms"
+              >
                 <RadioGroup
                   options={modalDrawerOptions}
                   value={uxPatterns.modalVsDrawer}
                   onChange={(v) => updateUXPatterns({ modalVsDrawer: v as UXPatternsData["modalVsDrawer"] })}
                   columns={3}
                 />
-              </div>
+              </Field>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  File Upload
-                </label>
+              <Field
+                icon={<Upload size={18} />}
+                iconColor="text-emerald-600 dark:text-emerald-400"
+                label="File Upload"
+                description="UX pattern for file selection and upload interactions"
+              >
                 <RadioGroup
                   options={fileUploadOptions}
                   value={uxPatterns.fileUpload}
                   onChange={(v) => updateUXPatterns({ fileUpload: v as UXPatternsData["fileUpload"] })}
                   columns={3}
                 />
-              </div>
+              </Field>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  List / Table Filtering Pattern
-                </label>
+              <Field
+                icon={<Filter size={18} />}
+                iconColor="text-teal-600 dark:text-teal-400"
+                label="List / Table Filtering Pattern"
+                description="Where filter controls are positioned relative to the data"
+              >
                 <RadioGroup
                   options={filteringOptions}
                   value={uxPatterns.filteringPattern}
                   onChange={(v) => updateUXPatterns({ filteringPattern: v as UXPatternsData["filteringPattern"] })}
                   columns={3}
                 />
-              </div>
+              </Field>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-2 dark:text-zinc-300">
-                  Mobile Navigation
-                </label>
+              <Field
+                icon={<Menu size={18} />}
+                iconColor="text-orange-600 dark:text-orange-400"
+                label="Mobile Navigation"
+                description="Navigation pattern shown on small-screen viewports"
+              >
                 <RadioGroup
                   options={mobileNavOptions}
                   value={uxPatterns.mobileNavigation}
                   onChange={(v) => updateUXPatterns({ mobileNavigation: v as UXPatternsData["mobileNavigation"] })}
                   columns={3}
                 />
-              </div>
+              </Field>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Checkbox

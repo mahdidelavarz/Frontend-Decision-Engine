@@ -6,9 +6,9 @@ import { useStepBack } from "@/components/wizard/useStepBack";
 import { RadioGroup } from "@/components/ui/RadioGroup";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { Collapsible } from "@/components/ui/Collapsible";
+import { Field } from "@/components/ui/Field";
 import {
   Fingerprint,
   Type,
@@ -21,6 +21,19 @@ import {
   Palette,
   Settings2,
   Globe,
+  Users2,
+  BarChart3,
+  Search,
+  Gauge,
+  Clock,
+  Network,
+  Globe2,
+  Package,
+  Server,
+  TrendingUp,
+  Image,
+  Languages,
+  AlignRight,
 } from "lucide-react";
 import type { ProjectData, ProjectDnaData } from "@/types";
 
@@ -198,59 +211,80 @@ export function ProjectStep() {
         onBack={onBack}
       />
 
-      <div className="space-y-10">
+      <div className="space-y-12">
         {/* ── Project DNA (optional) ── */}
         <Collapsible
           title="Project DNA"
           description="Shape recommendations without locking your choices — leave blank to skip"
-          icon={<Fingerprint size={16} />}
+          icon={<Fingerprint size={20} />}
+          iconColor="text-indigo-600 dark:text-indigo-400"
         >
-          <div className="space-y-6 mt-4">
-            <div>
-              <Label>Team Size</Label>
+          <div className="space-y-10 mt-4">
+            <Field
+              icon={<Users2 size={18} />}
+              iconColor="text-teal-600 dark:text-teal-400"
+              label="Team Size"
+              description="How many developers will work on this project"
+            >
               <RadioGroup
                 options={teamSizeOptions}
                 value={projectDna.teamSize}
                 onChange={(v) => updateProjectDna({ teamSize: v as ProjectDnaData["teamSize"] })}
                 columns={3}
               />
-            </div>
-            <div>
-              <Label>Project Scale</Label>
+            </Field>
+            <Field
+              icon={<BarChart3 size={18} />}
+              iconColor="text-indigo-600 dark:text-indigo-400"
+              label="Project Scale"
+              description="What stage and scope this project is targeting"
+            >
               <RadioGroup
                 options={projectScaleOptions}
                 value={projectDna.projectScale}
                 onChange={(v) => updateProjectDna({ projectScale: v as ProjectDnaData["projectScale"] })}
                 columns={3}
               />
-            </div>
-            <div>
-              <Label>SEO Importance</Label>
+            </Field>
+            <Field
+              icon={<Search size={18} />}
+              iconColor="text-orange-600 dark:text-orange-400"
+              label="SEO Importance"
+              description="How critical search engine visibility is for this app"
+            >
               <RadioGroup
                 options={seoOptions}
                 value={projectDna.seoImportance}
                 onChange={(v) => updateProjectDna({ seoImportance: v as ProjectDnaData["seoImportance"] })}
                 columns={3}
               />
-            </div>
-            <div>
-              <Label>Complexity</Label>
+            </Field>
+            <Field
+              icon={<Gauge size={18} />}
+              iconColor="text-purple-600 dark:text-purple-400"
+              label="Complexity"
+              description="Overall richness of UI interactions and data flows"
+            >
               <RadioGroup
                 options={complexityOptions}
                 value={projectDna.complexity}
                 onChange={(v) => updateProjectDna({ complexity: v as ProjectDnaData["complexity"] })}
                 columns={3}
               />
-            </div>
-            <div>
-              <Label>Longevity</Label>
+            </Field>
+            <Field
+              icon={<Clock size={18} />}
+              iconColor="text-blue-600 dark:text-blue-400"
+              label="Longevity"
+              description="Expected maintenance lifespan of the project"
+            >
               <RadioGroup
                 options={longevityOptions}
                 value={projectDna.longevity}
                 onChange={(v) => updateProjectDna({ longevity: v as ProjectDnaData["longevity"] })}
                 columns={2}
               />
-            </div>
+            </Field>
             {dna && (
               <p className="text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg px-3 py-2">
                 {dna}
@@ -269,7 +303,12 @@ export function ProjectStep() {
         </Section>
 
         {/* Language */}
-        <Section id="language" title="Language" icon={<Type size={14} />}>
+        <Section
+          id="language"
+          title="Language"
+          icon={<Type size={18} />}
+          iconColor="text-blue-600 dark:text-blue-400"
+        >
           <RadioGroup
             options={[
               { value: "typescript", label: "TypeScript", description: "Strongly recommended", recommended: true },
@@ -282,7 +321,13 @@ export function ProjectStep() {
         </Section>
 
         {/* Framework */}
-        <Section id="framework" title="Framework" required icon={<Boxes size={14} />}>
+        <Section
+          id="framework"
+          title="Framework"
+          required
+          icon={<Boxes size={18} />}
+          iconColor="text-violet-600 dark:text-violet-400"
+        >
           <RadioGroup
             options={frameworks}
             value={project.framework}
@@ -302,7 +347,8 @@ export function ProjectStep() {
             id="routing"
             title="Routing Library"
             description="Vite + React has no built-in router — choose one."
-            icon={<Route size={14} />}
+            icon={<Route size={18} />}
+            iconColor="text-orange-600 dark:text-orange-400"
           >
             <RadioGroup
               options={routingOptions}
@@ -318,7 +364,8 @@ export function ProjectStep() {
           id="stateManagement"
           title="Client State Management"
           description="Select all that apply (pick one for clarity)"
-          icon={<Layers size={14} />}
+          icon={<Layers size={18} />}
+          iconColor="text-purple-600 dark:text-purple-400"
         >
           <RadioGroup
             options={stateOptions}
@@ -330,7 +377,12 @@ export function ProjectStep() {
         </Section>
 
         {/* Server state */}
-        <Section id="serverState" title="Server State / Data Fetching" icon={<Database size={14} />}>
+        <Section
+          id="serverState"
+          title="Server State / Data Fetching"
+          icon={<Database size={18} />}
+          iconColor="text-sky-600 dark:text-sky-400"
+        >
           <RadioGroup
             options={serverStateOptions}
             value={project.serverState}
@@ -340,7 +392,12 @@ export function ProjectStep() {
         </Section>
 
         {/* Forms */}
-        <Section id="formLibrary" title="Form Library" icon={<ClipboardList size={14} />}>
+        <Section
+          id="formLibrary"
+          title="Form Library"
+          icon={<ClipboardList size={18} />}
+          iconColor="text-teal-600 dark:text-teal-400"
+        >
           <RadioGroup
             options={formOptions}
             value={project.formLibrary}
@@ -350,7 +407,12 @@ export function ProjectStep() {
         </Section>
 
         {/* Validation */}
-        <Section id="validation" title="Schema Validation" icon={<ShieldCheck size={14} />}>
+        <Section
+          id="validation"
+          title="Schema Validation"
+          icon={<ShieldCheck size={18} />}
+          iconColor="text-emerald-600 dark:text-emerald-400"
+        >
           <RadioGroup
             options={validationOptions}
             value={project.validation}
@@ -365,7 +427,8 @@ export function ProjectStep() {
           title="Styling Approach"
           required
           description="Select primary (and only secondary if truly needed)"
-          icon={<Palette size={14} />}
+          icon={<Palette size={18} />}
+          iconColor="text-rose-600 dark:text-rose-400"
         >
           <RadioGroup
             options={stylingOptions}
@@ -380,20 +443,29 @@ export function ProjectStep() {
         <Collapsible
           title="Advanced Options"
           description="API style, HTTP client, package manager, deployment, SEO, images"
-          icon={<Settings2 size={16} />}
+          icon={<Settings2 size={20} />}
+          iconColor="text-slate-500 dark:text-slate-400"
         >
-          <div className="space-y-6 mt-4">
-            <div>
-              <Label>API Style</Label>
+          <div className="space-y-10 mt-4">
+            <Field
+              icon={<Network size={18} />}
+              iconColor="text-violet-600 dark:text-violet-400"
+              label="API Style"
+              description="Communication protocol between frontend and backend"
+            >
               <RadioGroup
                 options={apiStyleOptions}
                 value={project.apiStyle}
                 onChange={(v) => updateProject({ apiStyle: v as ProjectData["apiStyle"] })}
                 columns={3}
               />
-            </div>
-            <div>
-              <Label>HTTP Client</Label>
+            </Field>
+            <Field
+              icon={<Globe2 size={18} />}
+              iconColor="text-sky-600 dark:text-sky-400"
+              label="HTTP Client"
+              description="Library used to make network requests"
+            >
               <RadioGroup
                 options={[
                   { value: "fetch", label: "Native Fetch", description: "No dependency", recommended: true },
@@ -403,9 +475,13 @@ export function ProjectStep() {
                 onChange={(v) => updateProject({ apiClient: v as ProjectData["apiClient"] })}
                 columns={2}
               />
-            </div>
-            <div>
-              <Label>Package Manager</Label>
+            </Field>
+            <Field
+              icon={<Package size={18} />}
+              iconColor="text-emerald-600 dark:text-emerald-400"
+              label="Package Manager"
+              description="Tool used to install and manage dependencies"
+            >
               <RadioGroup
                 options={pkgOptions}
                 value={project.packageManager}
@@ -420,34 +496,46 @@ export function ProjectStep() {
                   onChange={() => updateProject({ enforcePackageManager: !project.enforcePackageManager })}
                 />
               </div>
-            </div>
-            <div>
-              <Label>Deployment Target</Label>
+            </Field>
+            <Field
+              icon={<Server size={18} />}
+              iconColor="text-orange-600 dark:text-orange-400"
+              label="Deployment Target"
+              description="Where the app will be hosted and served from"
+            >
               <RadioGroup
                 options={deploymentOptions}
                 value={project.deploymentTarget}
                 onChange={(v) => updateProject({ deploymentTarget: v as ProjectData["deploymentTarget"] })}
                 columns={3}
               />
-            </div>
-            <div>
-              <Label>SEO Strategy</Label>
+            </Field>
+            <Field
+              icon={<TrendingUp size={18} />}
+              iconColor="text-rose-600 dark:text-rose-400"
+              label="SEO Strategy"
+              description="How search engine discoverability will be handled"
+            >
               <RadioGroup
                 options={seoStrategyOptions}
                 value={project.seoStrategy}
                 onChange={(v) => updateProject({ seoStrategy: v as ProjectData["seoStrategy"] })}
                 columns={3}
               />
-            </div>
-            <div>
-              <Label>Image Handling</Label>
+            </Field>
+            <Field
+              icon={<Image size={18} />}
+              iconColor="text-cyan-600 dark:text-cyan-400"
+              label="Image Handling"
+              description="How images are served, optimized, and loaded"
+            >
               <RadioGroup
                 options={imageHandlingOptions}
                 value={project.imageHandling}
                 onChange={(v) => updateProject({ imageHandling: v as ProjectData["imageHandling"] })}
                 columns={2}
               />
-            </div>
+            </Field>
           </div>
         </Collapsible>
 
@@ -455,11 +543,16 @@ export function ProjectStep() {
         <Collapsible
           title="Internationalization"
           description="Localization library and RTL language support"
-          icon={<Globe size={16} />}
+          icon={<Globe size={20} />}
+          iconColor="text-indigo-600 dark:text-indigo-400"
         >
-          <div className="space-y-6 mt-4">
-            <div>
-              <Label>Localization Library</Label>
+          <div className="space-y-10 mt-4">
+            <Field
+              icon={<Languages size={18} />}
+              iconColor="text-indigo-600 dark:text-indigo-400"
+              label="Localization Library"
+              description="Framework for translating strings and formatting locale data"
+            >
               <RadioGroup
                 options={localizationOptions}
                 value={project.localization}
@@ -476,16 +569,20 @@ export function ProjectStep() {
                   next-intl is optimized for Next.js — consider i18next for other frameworks.
                 </p>
               )}
-            </div>
-            <div>
-              <Label>RTL Support</Label>
+            </Field>
+            <Field
+              icon={<AlignRight size={18} />}
+              iconColor="text-teal-600 dark:text-teal-400"
+              label="RTL Support"
+              description="Whether the app must support right-to-left languages"
+            >
               <Checkbox
                 label="Project must support right-to-left languages"
                 description="Arabic, Hebrew, Persian, Urdu — requires logical CSS properties (margin-inline-start, not margin-left)"
                 checked={project.rtlSupport}
                 onChange={() => updateProject({ rtlSupport: !project.rtlSupport })}
               />
-            </div>
+            </Field>
           </div>
         </Collapsible>
       </div>
