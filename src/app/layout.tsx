@@ -28,6 +28,10 @@ export const metadata: Metadata = {
   title: "FrontForge",
   description:
     "Make all your frontend architecture decisions before writing a single line of code. Generate documentation, AI context, and design tokens.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
