@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useWizardStore } from "@/store";
 import { StepNav } from "./StepNav";
 import { StepFooter } from "./StepFooter";
@@ -30,6 +30,11 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
 
   const [isExporting, setIsExporting] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [currentStep]);
 
   const currentIndex = WIZARD_STEPS.indexOf(currentStep);
 
@@ -127,7 +132,7 @@ export function WizardShell({ children, currentStep, canProceed }: WizardShellPr
           />
         </div>
 
-        <main className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 lg:px-8 bg-white dark:bg-zinc-900">
+        <main ref={mainRef} className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 lg:px-8 bg-white dark:bg-zinc-900">
           <div className="mx-auto max-w-3xl lg:max-w-none">{children}</div>
         </main>
       </div>
